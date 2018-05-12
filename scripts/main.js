@@ -33,13 +33,8 @@ function preload () {
 }
 
 function create () {
-    //  A simple background for our game
-    // this.add.image(400, 300, 'sky');
-
-    // The player and its settings
     player = this.physics.add.sprite(100, 450, 'ship');
 
-    //  Player physics properties. Give the little guy a slight bounce.
     player.setCollideWorldBounds(true);
 
     //  Our player animations, turning, walking left and walking right.
@@ -79,21 +74,6 @@ function create () {
 
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
-
-    //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
-    // stars = this.physics.add.group({
-    //     key: 'star',
-    //     repeat: 11,
-    //     setXY: { x: 12, y: 0, stepX: 70 }
-    // });
-
-    // stars.children.iterate(function (child) {
-
-    //     //  Give each star a slightly different bounce
-    //     child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
-    // });
-
     bombs = this.physics.add.group();
 
     //  The score
@@ -170,7 +150,7 @@ function update () {
 // }
 
 function hitBomb (player, bomb) {
-    
+
     this.physics.pause();
 
     player.setTint(0xff0000);
