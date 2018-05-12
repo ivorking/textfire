@@ -15,6 +15,7 @@
     "url": "https://photonstorm@github.com/photonstorm/phaser.git"
   },
   "scripts": {
+    "start": "webpack-dev-server --hot",
     "build": "webpack",
     "watch": "webpack --watch",
     "dist": "webpack --config webpack.dist.config.js",
