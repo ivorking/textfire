@@ -1,5 +1,5 @@
-let winW = window.innerWidth;
-let winH = window.innerHeight;
+var winW = window.innerWidth;
+var winH = window.innerHeight;
 
 var config = {
     type: Phaser.AUTO,
@@ -22,9 +22,9 @@ var config = {
     },
     scene: {
         preload: preload,
-        render: render,
         create: create,
         update: update,
+        render: render,
         extend: {
             minimap: null,
             player: null,
@@ -34,7 +34,8 @@ var config = {
             lastFired: 0,
             text: null,
             createBulletEmitter: createBulletEmitter,
-            createEnemies: createEnemies
+            createEnemies: createEnemies,
+            createStarfield: createStarfield,
         }
     }
 };
@@ -55,6 +56,7 @@ function preload () {
     this.load.image('ship', './assets/ship.png', { frameWidth: 32, frameHeight: 48 });
     this.load.image('bullet', './assets/bullet.png');
     this.load.image('enemy', './assets/enemy.png');
+    this.load.image('star', './assets/backtile.png');
 }
 
 function render () {
@@ -98,13 +100,14 @@ function create () {
             }
         }
     });
-    this.cameras.main.setBounds(0, 0, 3200, 600);
+    this.cameras.main.setBounds(0, 0, null, 600);
     this.cursors = this.input.keyboard.createCursorKeys();
     this.bullets = this.physics.add.group({
         classType: Bullet,
         runChildUpdate: true
     });
 
+    this.createStarfield();
     this.bullets.enableBody = true;
     this.createEnemies();
     this.physics.world.enable(this.bullets, this.player, this.enemyship);
@@ -214,6 +217,25 @@ function update (time, delta) {
     }
     this.physics.world.collide(this.player, this.enemyship, shipCollide, null, this);
 
+    this.cameras.main.scrollX = this.player.x - 400;
+
+}
+
+function createStarfield ()
+{
+    //  Starfield background
+    var group = this.add.group({ key: 'star', frameQuantity: 256 });
+    group.createMultiple({ key: 'star', frameQuantity: 32 });
+    var rect = new Phaser.Geom.Rectangle(0, 0, 3500, 550);
+    Phaser.Actions.RandomRectangle(group.getChildren(), rect);
+    group.children.iterate(function (child, index) {
+        var sf = Math.max(0.3, Math.random());
+        if (child.texture.key === 'star')
+        {
+            sf = 0.2;
+        }
+        child.setScrollFactor(sf);
+    }, this);
 }
 
 function shipCollide () {
