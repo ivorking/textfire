@@ -41,9 +41,6 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-// var enemyship;
-// var bullets;
-// var bullet;
 var bulletTime = 300;
 var direction = 1;
 var fireButton;
@@ -102,12 +99,12 @@ function create () {
         }
     });
     this.cameras.main.setBounds(0, 0, 3200, 600);
- 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.bullets = this.physics.add.group({
         classType: Bullet,
         runChildUpdate: true
     });
+
     this.bullets.enableBody = true;
     this.createEnemies();
     this.physics.world.enable(this.bullets, this.player, this.enemyship);
@@ -145,7 +142,7 @@ function create () {
     });
 
     // score
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    scoreText = this.add.text(5, 5, 'Score: 0', { fontSize: '20px', fill: '#000' });
 
 }
 
