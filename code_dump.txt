@@ -1,0 +1,7 @@
+ 
+    // bullets
+    bullets = this.physics.add.group();
+    // bullets = game.add.group();
+    bullets.enableBody = true;
+    bullets.physicsBodyType = Phaser.Physics.ARCADE;
+    bullets.createMultiple(30, 'bullet');
