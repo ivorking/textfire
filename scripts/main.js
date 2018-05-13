@@ -5,7 +5,7 @@ var config = {
     type: Phaser.AUTO,
     width: winW,
     height: winH,
-    // parent: 'phaser-example',
+    parent: 'phaser-example',
     backgroundColor: '#ffffff',
     physics: {
         default: 'arcade',
@@ -41,7 +41,9 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-var enemyship;
+// var enemyship;
+// var bullets;
+// var bullet;
 var bulletTime = 300;
 var direction = 1;
 var fireButton;
@@ -65,8 +67,7 @@ function render () {
 function create () {
 
     // player setup
-    this.player = this.physics.add.sprite(100, 450, 'ship').setDepth(1);
-    // this.player.setMaxVelocity(1000).setFriction(800, 600).setPassiveCollision();
+    this.player = this.physics.add.sprite(20, 200, 'ship').setDepth(1);
     this.cursors = this.input.keyboard.createCursorKeys();
     this.player.setCollideWorldBounds(true);
 
@@ -101,14 +102,19 @@ function create () {
         }
     });
     this.cameras.main.setBounds(0, 0, 3200, 600);
-    this.createBulletEmitter();
  
     this.cursors = this.input.keyboard.createCursorKeys();
-    this.bullets = this.add.group({ classType: Bullet, runChildUpdate: true });
-    // this.physics.add.collider(bullets, enemyship);
- 
+    this.bullets = this.physics.add.group({
+        classType: Bullet,
+        runChildUpdate: true
+    });
+    this.bullets.enableBody = true;
     this.createEnemies();
     this.physics.world.enable(this.bullets, this.player, this.enemyship);
+    this.physics.add.collider(this.bullets, this.enemyship, destroyEnemy, null, this);
+
+    console.log(this.player);
+    console.log(this.enemyship);
 
     this.anims.create({
         key: 'left',
@@ -149,8 +155,9 @@ function createEnemies () {
         key: 'standard'
     }
 
-    enemyship = this.physics.add.sprite(winW-100, 50, 'enemy').setActive();
-    enemyship.setVelocity(-50, 0);
+    this.enemyship = this.physics.add.sprite(winW-100, 200, 'enemy').setActive();
+    this.enemyship.setVelocity(-50, 0);
+
 }
 
 function createBulletEmitter ()
@@ -169,7 +176,6 @@ function createBulletEmitter ()
 function update (time, delta) {
 
     // player ship controls
-
     if (this.cursors.left.isDown)
     {
         this.player.setVelocityX(-160);
@@ -197,7 +203,7 @@ function update (time, delta) {
     }
 
     if (this.cursors.space.isDown && time > this.lastFired)
-    {
+        {
         bullet = this.bullets.get();
         bullet.setActive(true);
         bullet.setVisible(true);
@@ -206,14 +212,20 @@ function update (time, delta) {
         {
             bullet.fire(this.player);
             this.lastFired = time + 100;
-                        
         }
+
     }
+    this.physics.world.collide(this.player, this.enemyship, shipCollide, null, this);
+
 }
 
-function hitFunction () {
-    console.log("hit")
+function shipCollide () {
+    console.log("Ships collide!");
     this.physics.pause();
 }
 
+function destroyEnemy () {
+    console.log("Enemy destroyed!");
+    this.physics.pause();
+}
 
