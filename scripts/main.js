@@ -1,5 +1,6 @@
 var winW = window.innerWidth;
 var winH = window.innerHeight;
+var background;
 
 var config = {
     type: Phaser.AUTO,
@@ -49,8 +50,55 @@ var score = 0;
 var gameOver = false;
 var scoreText;
 
-function init () {
+var totalObjects = 1000;
+var maxVelocity = 2;
+var starSize = 1;
+var twinkleFreq = 50000;
+
+var canvas = document.getElementById('field');
+canvas.width = winW;
+canvas.height = winH;
+var ctx = canvas.getContext("2d");
+var stars = [];
+
+function draw() {
+  requestAnimFrame(draw);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+   for(f=0;f<stars.length;f++)
+   {
+     stars[f].Update();
+     stars[f].Draw();
+   }
 }
+
+function Star(){
+  this.X = Math.random()*canvas.width;
+  this.Y = Math.random()*canvas.height;
+  this.Velocity = (Math.random()*maxVelocity);
+  this.Opacity = (((Math.random()*10)+1)*0.1);
+  
+  this.Update = function() {
+    this.X -= this.Velocity;
+    if(this.X<0){ ///reset
+      this.X = canvas.width+1;
+    }
+  };
+  
+  this.Draw = function() {
+    ctx.fillStyle = "rgba(0,0,0," + this.Opacity + ")";
+    if(Math.round((Math.random()*twinkleFreq))==1){
+      ctx.fillRect(this.X,this.Y,starSize+2,starSize+2);
+    }
+    else{
+      ctx.fillRect(this.X,this.Y,starSize,starSize);
+    }
+  };
+}
+
+// end
+
+
+
 
 function preload () {
     this.load.image('ship', './assets/ship.png', { frameWidth: 32, frameHeight: 48 });
@@ -100,21 +148,21 @@ function create () {
             }
         }
     });
-    this.cameras.main.setBounds(0, 0, null, 600);
+
+    this.cameras.main.setBounds(0, 0, winW, winH);
     this.cursors = this.input.keyboard.createCursorKeys();
     this.bullets = this.physics.add.group({
         classType: Bullet,
         runChildUpdate: true
     });
 
-    this.createStarfield();
-    this.bullets.enableBody = true;
+    // this.createStarfield();
     this.createEnemies();
+
+    background = this.add.tileSprite(0, 0, winW * 3, winH * 3, 'star');
+    this.bullets.enableBody = true;
     this.physics.world.enable(this.bullets, this.player, this.enemyship);
     this.physics.add.collider(this.bullets, this.enemyship, destroyEnemy, null, this);
-
-    console.log(this.player);
-    console.log(this.enemyship);
 
     this.anims.create({
         key: 'left',
@@ -147,6 +195,24 @@ function create () {
     // score
     scoreText = this.add.text(5, 5, 'Score: 0', { fontSize: '20px', fill: '#000' });
 
+    window.requestAnimFrame = (function(){
+        return  window.requestAnimationFrame       ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame    ||
+                function( callback ){
+                  setInterval(callback, 75);
+                };
+    })();
+
+    // function init() {
+        for(i=0;i<totalObjects;i++){
+          stars.push(new Star());
+        }
+    // }   
+
+    // this.init();
+    requestAnimFrame(draw);
+    
 }
 
 function createEnemies () {
@@ -217,8 +283,7 @@ function update (time, delta) {
     }
     this.physics.world.collide(this.player, this.enemyship, shipCollide, null, this);
 
-    this.cameras.main.scrollX = this.player.x - 400;
-
+    background.tilePositionX += 0.5;
 }
 
 function createStarfield ()
@@ -226,7 +291,7 @@ function createStarfield ()
     //  Starfield background
     var group = this.add.group({ key: 'star', frameQuantity: 256 });
     group.createMultiple({ key: 'star', frameQuantity: 32 });
-    var rect = new Phaser.Geom.Rectangle(0, 0, 3500, 550);
+    var rect = new Phaser.Geom.Rectangle(0, 0, winW, winH);
     Phaser.Actions.RandomRectangle(group.getChildren(), rect);
     group.children.iterate(function (child, index) {
         var sf = Math.max(0.3, Math.random());
