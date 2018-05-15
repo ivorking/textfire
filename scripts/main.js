@@ -173,14 +173,16 @@ function createEnemies () {
 
     enemyships = this.physics.add.group;
 
-    for (let index = 0; index <= score; index++) {
-        this.enemyship = this.physics.add.sprite(winW-20, (Math.floor(Math.random() * Math.floor(winH))), ('boss' + (Math.floor(Math.random() * 6) + 1))).setActive();      
-        this.enemyship.setVelocity(-50, 0);
-        this.physics.world.enable(this.bullets, this.player, this.enemyship);
-        this.physics.add.collider(this.bullets, this.enemyship, destroyEnemy, null, this);
-        this.physics.add.collider(this.player, this.enemyship, shipCollide, null, this);
-        console.log(index);
-    }
+    if (score < 20) {
+        for (let index = 0; index <= score; index++) {
+            this.enemyship = this.physics.add.sprite(winW-20, (Math.floor(Math.random() * Math.floor(winH))), ('boss' + (Math.floor(Math.random() * 6) + 1))).setActive();      
+            this.enemyship.setVelocity(-50, 0);
+            this.physics.world.enable(this.bullets, this.player, this.enemyship);
+            this.physics.add.collider(this.bullets, this.enemyship, destroyEnemy, null, this);
+            this.physics.add.collider(this.player, this.enemyship, shipCollide, null, this);
+            console.log(index);
+        }
+    };
     index = 0;
 
 }
