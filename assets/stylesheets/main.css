@@ -5,12 +5,14 @@ html, body {
     background: rgb(255, 255, 255);
   }
   
-  canvas{
+canvas {
     position: absolute;
     min-width: 400px;
     min-height: 400px;
     width: 100%;
     height: 100%;
   
-  }
-  
+}
+ 
+
+

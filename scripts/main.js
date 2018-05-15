@@ -44,10 +44,8 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-var makenew = false;
 var bulletTime = 300;
 var direction = 1;
-var fireButton;
 var score = 0;
 var gameOver = false;
 var scoreText;
@@ -55,16 +53,6 @@ var scoreText;
 var music;
 var gunfire;
 var explosion;
-
-var totalObjects = 1000;
-var maxVelocity = 2;
-var starSize = 1;
-
-var canvas = document.getElementById('field');
-canvas.width = winW;
-canvas.height = winH;
-var ctx = canvas.getContext("2d");
-var stars = [];
 
 function preload () {
     this.load.image('ship', './assets/ship.png', { frameWidth: 32, frameHeight: 48 });
@@ -262,7 +250,6 @@ function destroyEnemy () {
     this.enemyship.disableBody(true, true);
     score++;
     scoreText.setText('Score: ' + score);
-    makenew = true;
     this.createEnemies();
 }
 
