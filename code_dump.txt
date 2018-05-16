@@ -5,3 +5,25 @@
     bullets.enableBody = true;
     bullets.physicsBodyType = Phaser.Physics.ARCADE;
     bullets.createMultiple(30, 'bullet');
+
+
+    // {
+    //     preload: preload,
+    //     create: create,
+    //     update: update,
+    //     render: render,
+    //     extend: {
+    //         minimap: null,
+    //         player: null,
+    //         cursors: null,
+    //         flares: null,
+    //         bullets: null,
+    //         lastFired: 0,
+    //         text: null,
+    //         createEnemies: createEnemies,
+    //     }
+    // },
+
+      // function render () {
+    //     this.debug.text( 'This is debug text', 100, 380 );
+    // }
