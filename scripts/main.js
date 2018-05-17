@@ -9,6 +9,7 @@ var config = {
     height: winH,
     parent: 'phaser-example',
     backgroundColor: '#ffffff',
+    title: 'textFIRE'
     physics: {
         default: 'arcade',
         arcade: {
@@ -35,6 +36,8 @@ var direction = 1;
 var score = 0;
 var gameOver = false;
 var scoreText;
+var enemies = [];
+var enemiesToSpawn = 3;
 
 var music;
 var gunfire;

@@ -120,21 +120,35 @@ class gameloop extends Phaser.Scene {
             key: 'standard'
         }
     
-        if (score < 20) {
+        // if (score < 20) {
 
-            for (let index = 0; index <= score; index++) {
-                this.enemyship = this.physics.add.sprite(winW-20, (Math.floor(Math.random() * Math.floor(winH))), ('boss' + (Math.floor(Math.random() * 6) + 1))).setActive();      
-                this.enemyship.setVelocity(-50, 0);
+        //     for (let index = 0; index <= score; index++) {
+        //         this.enemyship = this.physics.add.sprite(winW-20, (Math.floor(Math.random() * Math.floor(winH))), ('boss' + (Math.floor(Math.random() * 6) + 1))).setActive();      
+        //         this.enemyship.setVelocity(-50, 0);
 
-                this.physics.world.enable(this.bullets, this.player, this.enemyship);
-                this.physics.add.collider(this.bullets, this.enemyship, this.destroyEnemy, null, this);
-                this.physics.add.collider(this.player, this.enemyship, this.shipCollide, null, this);
+        //         this.physics.world.enable(this.bullets, this.player, this.enemyship);
+        //         this.physics.add.collider(this.bullets, this.enemyship, this.destroyEnemy, null, this);
+        //         this.physics.add.collider(this.player, this.enemyship, this.shipCollide, null, this);
                 
-            }
-        console.log(this.enemyship);
-        }
+        //     }
+        // console.log(this.enemyship);
+        // }
+
+    for (let index = 0; index < score; index++) {
+        ('boss' + (Math.floor(Math.random() * 6) + 1)   
+    }
+ enemies = this.physics.add.group({
+      key: "boss2",
+      repeat: enemiesToSpawn
+    });
+
+    enemies.children.iterate(function(enemy) {
+        enemy.setX(Phaser.Math.FloatBetween(winW, winW - 200));
+        enemy.setY(Phaser.Math.FloatBetween(0, winH));
+
+      });
+
     };
-    
     update (time, delta) {
     
         // player ship controls
