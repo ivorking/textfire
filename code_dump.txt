@@ -1,5 +1,4 @@
- 
-    // bullets
+     // bullets
     bullets = this.physics.add.group();
     // bullets = game.add.group();
     bullets.enableBody = true;
@@ -27,3 +26,195 @@
       // function render () {
     //     this.debug.text( 'This is debug text', 100, 380 );
     // }
+
+    this.enemies = this.enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+
+        // if (score < 20) {
+
+        //     for (let index = 0; index <= score; index++) {
+        //         this.enemyship = this.physics.add.sprite(winW-20, (Math.floor(Math.random() * Math.floor(winH))), ('boss' + (Math.floor(Math.random() * 6) + 1))).setActive();
+        //         this.enemyship.setVelocity(-50, 0);
+
+        //         this.physics.world.enable(this.bullets, this.player, this.enemyship);
+        //         this.physics.add.collider(this.bullets, this.enemyship, this.destroyEnemy, null, this);
+        //         this.physics.add.collider(this.player, this.enemyship, this.shipCollide, null, this);
+
+        //     }
+        // console.log(this.enemyship);
+        // }
+
+                // this.enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+
+        // enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+
+        // // this.enemies =.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+        // this.enemies.children.entries[0].setVelocity(-50, 0);
+
+        //     // this.enemies =.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+        //     this.enemies.children.entries[0].setVelocity(-50, 0);
+
+        //     // this.physics.world.enable(this.bullets, this.player, this.enemies);
+        //     this.physics.add.collider(this.bullets, this.enemies, this.destroyEnemy, null, this);
+        //     this.physics.add.collider(this.player, this.enemies, this.shipCollide, null, this);
+        //     buildEnemy = false;
+
+
+        // this.physics.world.enable(this.bullets, this.player, this.enemies);
+        // this.physics.add.collider(this.bullets, this.enemies, this.destroyEnemy, null, this);
+        // this.physics.add.collider(this.player, this.enemies, this.shipCollide, null, this);
+
+
+        // enemies = this.physics.add.group({
+        //     key: "boss2",
+        //     repeat: enemiesToSpawn
+        // });
+        //     debugger;
+        // enemies.children.iterate(function(enemy) {
+        //     enemy.setX(Phaser.Math.FloatBetween(winW, winW - 200));
+        //     enemy.setY(Phaser.Math.FloatBetween(0, winH));
+        // this.enemies.children.entries[0].setVelocity(-50, 0);
+            // this.enemies = this.physics.add.sprite(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+
+        //   });
+
+
+        // enemies = this.physics.add.group();
+
+this.enemies.children.entries[0]
+
+
+WORKING
+            enemies = this.physics.add.group();
+            enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+
+this.enemies.children.entries[0].setX(20);
+this.enemies.children.entries.length;
+
+
+
+       }
+        // else if ((score < 20) && (this.enemies.children.entries.length < 5))
+        else if (score < 20)
+
+        {
+            for (let index = 0; index <= score; index++) {
+
+                this.enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+                this.enemies.setVelocity(-50, 0);
+
+                this.physics.world.enable(this.bullets, this.player, this.enemies);
+                this.physics.add.collider(this.bullets, this.enemies, this.destroyEnemy, null, this);
+                this.physics.add.collider(this.player, this.enemies, this.shipCollide, null, this);
+
+            }
+            buildEnemy = false;
+        }
+
+
+this.enemies = this.enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+
+        // if (score < 20) {
+
+        //     for (let index = 0; index <= score; index++) {
+        //         this.enemyship = this.physics.add.sprite(winW-20, (Math.floor(Math.random() * Math.floor(winH))), ('boss' + (Math.floor(Math.random() * 6) + 1))).setActive();
+        //         this.enemyship.setVelocity(-50, 0);
+
+        //         this.physics.world.enable(this.bullets, this.player, this.enemyship);
+        //         this.physics.add.collider(this.bullets, this.enemyship, this.destroyEnemy, null, this);
+        //         this.physics.add.collider(this.player, this.enemyship, this.shipCollide, null, this);
+
+        //     }
+        // console.log(this.enemyship);
+        // }
+
+                // this.enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+
+        // enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+
+        // // this.enemies =.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+        // this.enemies.children.entries[0].setVelocity(-50, 0);
+
+        //     // this.enemies =.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+        //     this.enemies.children.entries[0].setVelocity(-50, 0);
+
+        //     // this.physics.world.enable(this.bullets, this.player, this.enemies);
+        //     this.physics.add.collider(this.bullets, this.enemies, this.destroyEnemy, null, this);
+        //     this.physics.add.collider(this.player, this.enemies, this.shipCollide, null, this);
+        //     buildEnemy = false;
+
+
+        // this.physics.world.enable(this.bullets, this.player, this.enemies);
+        // this.physics.add.collider(this.bullets, this.enemies, this.destroyEnemy, null, this);
+        // this.physics.add.collider(this.player, this.enemies, this.shipCollide, null, this);
+
+
+        // enemies = this.physics.add.group({
+        //     key: "boss2",
+        //     repeat: enemiesToSpawn
+        // });
+        //     debugger;
+        // enemies.children.iterate(function(enemy) {
+        //     enemy.setX(Phaser.Math.FloatBetween(winW, winW - 200));
+        //     enemy.setY(Phaser.Math.FloatBetween(0, winH));
+        // this.enemies.children.entries[0].setVelocity(-50, 0);
+            // this.enemies = this.physics.add.sprite(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+
+        //   });
+
+
+        // enemies = this.physics.add.group();
+
+this.enemies.children.entries[0]
+
+
+WORKING
+            enemies = this.physics.add.group();
+            enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+
+this.enemies.children.entries[0].setX(20);
+this.enemies.children.entries.length;
+
+
+
+       }
+        // else if ((score < 20) && (this.enemies.children.entries.length < 5))
+        else if (score < 20)
+
+        {
+            for (let index = 0; index <= score; index++) {
+
+                this.enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+                this.enemies.setVelocity(-50, 0);
+
+                this.physics.world.enable(this.bullets, this.player, this.enemies);
+                this.physics.add.collider(this.bullets, this.enemies, this.destroyEnemy, null, this);
+                this.physics.add.collider(this.player, this.enemies, this.shipCollide, null, this);
+
+            }
+            buildEnemy = false;
+        }
+
+
+
+WORKING
+
+        enemies = this.physics.add.group();
+        enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+
+
+WORKING
+
+        var config = {
+            key: 'standard'
+        }
+        enemies = this.physics.add.group();
+        enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+
+            // this.physics.add.sprite(winW-20, (Math.floor(Math.random() * Math.floor(winH))), ('boss' + (Math.floor(Math.random() * 6) + 1))).setActive();
+
+            this.physics.world.enable(this.bullets, this.player, enemies);
+            this.physics.add.collider(this.bullets, enemies, this.destroyEnemy, null, this);
+            this.physics.add.collider(this.player, enemies, this.shipCollide, null, this);
+
+            buildEnemy = false;
+            console.log("first run");

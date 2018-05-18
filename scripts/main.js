@@ -9,7 +9,7 @@ var config = {
     height: winH,
     parent: 'phaser-example',
     backgroundColor: '#ffffff',
-    title: 'textFIRE'
+    title: 'textFIRE',
     physics: {
         default: 'arcade',
         arcade: {
@@ -22,9 +22,9 @@ var config = {
                 thickness: 32
             }
         }
-    },
-    audio: {
-        disableWebAudio: true
+    // },
+    // audio: {
+    //     disableWebAudio: true
     },
     scene: [ startpage, gameloop, endpage]
 
@@ -34,10 +34,12 @@ var background;
 var bulletTime = 300;
 var direction = 1;
 var score = 0;
+
 var gameOver = false;
 var scoreText;
 var enemies = [];
 var enemiesToSpawn = 3;
+var buildEnemy = true;
 
 var music;
 var gunfire;

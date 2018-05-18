@@ -1,9 +1,11 @@
 // main gameloop
 
+
 class gameloop extends Phaser.Scene {
 
     constructor() {
         super ({key: "gameloop"});
+
     }
 
     preload () {
@@ -28,7 +30,7 @@ class gameloop extends Phaser.Scene {
     create () {
     
         // player setup
-    
+        
         var music = this.sound.add('song');
         music.play();
         lastFired: 0;
@@ -109,46 +111,47 @@ class gameloop extends Phaser.Scene {
             repeat: 1
         });
     
-        // score
+        // score 
         scoreText = this.add.text(5, 5, 'Score:' + score, { fontSize: '20px', fill: '#000' });
-       
+     
+        this.physics.world.enable(this.bullets, this.player, enemies);
+        this.physics.add.collider(this.bullets, enemies, this.destroyEnemy, null, this);
+        this.physics.add.collider(this.player, enemies, this.shipCollide, null, this);
+
+
     }
     
     createEnemies () {
-    
+
         var config = {
             key: 'standard'
         }
-    
-        // if (score < 20) {
 
-        //     for (let index = 0; index <= score; index++) {
-        //         this.enemyship = this.physics.add.sprite(winW-20, (Math.floor(Math.random() * Math.floor(winH))), ('boss' + (Math.floor(Math.random() * 6) + 1))).setActive();      
-        //         this.enemyship.setVelocity(-50, 0);
 
-        //         this.physics.world.enable(this.bullets, this.player, this.enemyship);
-        //         this.physics.add.collider(this.bullets, this.enemyship, this.destroyEnemy, null, this);
-        //         this.physics.add.collider(this.player, this.enemyship, this.shipCollide, null, this);
-                
-        //     }
-        // console.log(this.enemyship);
-        // }
 
-    for (let index = 0; index < score; index++) {
-        ('boss' + (Math.floor(Math.random() * 6) + 1)   
-    }
- enemies = this.physics.add.group({
-      key: "boss2",
-      repeat: enemiesToSpawn
-    });
+        if (score == 0) {
+            enemies = this.physics.add.group();
+            enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
 
-    enemies.children.iterate(function(enemy) {
-        enemy.setX(Phaser.Math.FloatBetween(winW, winW - 200));
-        enemy.setY(Phaser.Math.FloatBetween(0, winH));
+            // this.physics.add.sprite(winW-20, (Math.floor(Math.random() * Math.floor(winH))), ('boss' + (Math.floor(Math.random() * 6) + 1))).setActive();  
 
-      });
+            // this.physics.world.enable(this.bullets, this.player, enemies);
+            // this.physics.add.collider(this.bullets, enemies, this.destroyEnemy, null, this);
+            // this.physics.add.collider(this.player, enemies, this.shipCollide, null, this);
+
+            buildEnemy = false;
+            console.log("first run");
+ 
+        } else {
+            for (let index = 0; index <= score; index++) {
+                enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+           
+            }
+            buildEnemy = false;
+        }
 
     };
+    
     update (time, delta) {
     
         // player ship controls
@@ -196,6 +199,8 @@ class gameloop extends Phaser.Scene {
         }
     
         background.tilePositionX += 0.5;
+        console.log(buildEnemy);
+        if (buildEnemy) { this.createEnemies() };
     }
     
     shipCollide () {
@@ -203,7 +208,7 @@ class gameloop extends Phaser.Scene {
         explosion.play();
     
         console.log("Ships collide!");
-        this.enemyship.disableBody(true, true);
+        this.enemies.children.entries[0].disableBody(true, true);
         this.player.disableBody(true, true);
     }
     
@@ -212,10 +217,13 @@ class gameloop extends Phaser.Scene {
         explosion.play();
     
         console.log("Enemy destroyed!");
-        this.enemyship.disableBody(true, true);
+        enemies.children.entries[0].disableBody(true, true);
         score++;
         scoreText.setText('Score: ' + score);
-        this.createEnemies();
+
+        buildEnemy = true;
+
+
     }
     
     

@@ -6,10 +6,12 @@
 
 var Class = require('../utils/Class');
 var CONST = require('../const');
+var GetFastValue = require('../utils/object/GetFastValue');
 var GetValue = require('../utils/object/GetValue');
+var IsPlainObject = require('../utils/object/IsPlainObject');
 var MATH = require('../math/const');
 var NOOP = require('../utils/NOOP');
-var Plugins = require('../plugins');
+var DefaultPlugins = require('../plugins/DefaultPlugins');
 var ValueToColor = require('../display/color/ValueToColor');
 
 /**
@@ -57,8 +59,9 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {number} [resolution=1] - [description]
  * @property {number} [type=CONST.AUTO] - [description]
  * @property {*} [parent=null] - [description]
- * @property {HTMLCanvasElement} [canvas=null] - [description]
+ * @property {HTMLCanvasElement} [canvas=null] - Provide your own Canvas element for Phaser to use instead of creating one.
  * @property {string} [canvasStyle=null] - [description]
+ * @property {CanvasRenderingContext2D} [context] - Provide your own Canvas Context for Phaser to use, instead of creating one.
  * @property {object} [scene=null] - [description]
  * @property {string[]} [seed] - [description]
  * @property {string} [title=''] - [description]
@@ -110,7 +113,6 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @since 3.0.0
  *
  * @param {GameConfig} [GameConfig] - The configuration object for your Phaser Game instance.
- *
  */
 var Config = new Class({
 
@@ -145,18 +147,15 @@ var Config = new Class({
          */
         this.zoom = GetValue(config, 'zoom', 1);
 
-
         /**
          * @const {number} Phaser.Boot.Config#resolution - [description]
          */
         this.resolution = GetValue(config, 'resolution', 1);
 
-
         /**
          * @const {number} Phaser.Boot.Config#renderType - [description]
          */
         this.renderType = GetValue(config, 'type', CONST.AUTO);
-
 
         /**
          * @const {?*} Phaser.Boot.Config#parent - [description]
@@ -164,21 +163,24 @@ var Config = new Class({
         this.parent = GetValue(config, 'parent', null);
 
         /**
-         * @const {?HTMLCanvasElement} Phaser.Boot.Config#canvas - [description]
+         * @const {?HTMLCanvasElement} Phaser.Boot.Config#canvas - Force Phaser to use your own Canvas element instead of creating one.
          */
         this.canvas = GetValue(config, 'canvas', null);
+
+        /**
+         * @const {?(CanvasRenderingContext2D|WebGLRenderingContext)} Phaser.Boot.Config#context - Force Phaser to use your own Canvas context instead of creating one.
+         */
+        this.context = GetValue(config, 'context', null);
 
         /**
          * @const {?string} Phaser.Boot.Config#canvasStyle - [description]
          */
         this.canvasStyle = GetValue(config, 'canvasStyle', null);
 
-
         /**
          * @const {?object} Phaser.Boot.Config#sceneConfig - [description]
          */
         this.sceneConfig = GetValue(config, 'scene', null);
-
 
         /**
          * @const {string[]} Phaser.Boot.Config#seed - [description]
@@ -186,7 +188,6 @@ var Config = new Class({
         this.seed = GetValue(config, 'seed', [ (Date.now() * Math.random()).toString() ]);
 
         MATH.RND.init(this.seed);
-
 
         /**
          * @const {string} Phaser.Boot.Config#gameTitle - [description]
@@ -203,8 +204,8 @@ var Config = new Class({
          */
         this.gameVersion = GetValue(config, 'version', '');
 
-
         //  Input
+
         /**
          * @const {boolean} Phaser.Boot.Config#inputKeyboard - [description]
          */
@@ -214,7 +215,6 @@ var Config = new Class({
          * @const {*} Phaser.Boot.Config#inputKeyboardEventTarget - [description]
          */
         this.inputKeyboardEventTarget = GetValue(config, 'input.keyboard.target', window);
-
 
         /**
          * @const {(boolean|object)} Phaser.Boot.Config#inputMouse - [description]
@@ -231,7 +231,6 @@ var Config = new Class({
          */
         this.inputMouseCapture = GetValue(config, 'input.mouse.capture', true);
 
-
         /**
          * @const {boolean} Phaser.Boot.Config#inputTouch - [description]
          */
@@ -247,31 +246,27 @@ var Config = new Class({
          */
         this.inputTouchCapture = GetValue(config, 'input.touch.capture', true);
 
-
         /**
          * @const {boolean} Phaser.Boot.Config#inputGamepad - [description]
          */
         this.inputGamepad = GetValue(config, 'input.gamepad', false);
-
 
         /**
          * @const {boolean} Phaser.Boot.Config#disableContextMenu - [description]
          */
         this.disableContextMenu = GetValue(config, 'disableContextMenu', false);
 
-
         /**
          * @const {any} Phaser.Boot.Config#audio - [description]
          */
         this.audio = GetValue(config, 'audio');
 
-
         //  If you do: { banner: false } it won't display any banner at all
+
         /**
          * @const {boolean} Phaser.Boot.Config#hideBanner - [description]
          */
         this.hideBanner = (GetValue(config, 'banner', null) === false);
-
 
         /**
          * @const {boolean} Phaser.Boot.Config#hidePhaser - [description]
@@ -361,7 +356,6 @@ var Config = new Class({
          */
         this.powerPreference = GetValue(renderConfig, 'powerPreference', 'default');
 
-
         var bgc = GetValue(config, 'backgroundColor', 0);
 
         /**
@@ -374,7 +368,6 @@ var Config = new Class({
             this.backgroundColor.alpha = 0;
         }
 
-
         //  Callbacks
         /**
          * @const {BootCallback} Phaser.Boot.Config#preBoot - [description]
@@ -385,7 +378,6 @@ var Config = new Class({
          * @const {BootCallback} Phaser.Boot.Config#postBoot - [description]
          */
         this.postBoot = GetValue(config, 'callbacks.postBoot', NOOP);
-
 
         //  Physics
         //  physics: {
@@ -405,8 +397,8 @@ var Config = new Class({
          */
         this.defaultPhysicsSystem = GetValue(this.physics, 'default', false);
 
-
         //  Loader Defaults
+
         /**
          * @const {string} Phaser.Boot.Config#loaderBaseURL - [description]
          */
@@ -452,13 +444,66 @@ var Config = new Class({
          */
         this.loaderTimeout = GetValue(config, 'loader.timeout', 0);
 
+        //  Plugins
 
-        //  Scene Plugins
-        /**
-         * @const {any} Phaser.Boot.Config#defaultPlugins - [description]
+        /*
+         * Allows `plugins` property to either be an array, in which case it just replaces
+         * the default plugins like previously, or a config object.
+         *
+         * plugins: {
+         *    global: [
+         *        { key: 'TestPlugin', plugin: TestPlugin, start: true },
+         *    ],
+         *    scene: [
+         *        { key: 'WireFramePlugin', plugin: WireFramePlugin, systemKey: 'wireFramePlugin', sceneKey: 'wireframe' }
+         *    ],
+         *    default: [], OR
+         *    defaultMerge: {
+         *        'ModPlayer'
+         *    }
+         * }
          */
-        this.defaultPlugins = GetValue(config, 'plugins', Plugins.DefaultScene);
 
+        /**
+         * @const {any} Phaser.Boot.Config#installGlobalPlugins - [description]
+         */
+        this.installGlobalPlugins = [];
+
+        /**
+         * @const {any} Phaser.Boot.Config#installScenePlugins - [description]
+         */
+        this.installScenePlugins = [];
+
+        var plugins = GetValue(config, 'plugins', null);
+        var defaultPlugins = DefaultPlugins.DefaultScene;
+
+        if (plugins)
+        {
+            //  Old 3.7 array format?
+            if (Array.isArray(plugins))
+            {
+                this.defaultPlugins = plugins;
+            }
+            else if (IsPlainObject(plugins))
+            {
+                this.installGlobalPlugins = GetFastValue(plugins, 'global', []);
+                this.installScenePlugins = GetFastValue(plugins, 'scene', []);
+
+                if (Array.isArray(plugins.default))
+                {
+                    defaultPlugins = plugins.default;
+                }
+                else if (Array.isArray(plugins.defaultMerge))
+                {
+                    defaultPlugins = defaultPlugins.concat(plugins.defaultMerge);
+                }
+            }
+        }
+
+        /**
+         * @const {any} Phaser.Boot.Config#defaultPlugins - The plugins installed into every Scene (in addition to CoreScene and Global).
+         */
+        this.defaultPlugins = defaultPlugins;
 
         //  Default / Missing Images
         var pngPrefix = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAg';

@@ -6,9 +6,9 @@
 
 var Class = require('../utils/Class');
 var CONST = require('./const');
+var DefaultPlugins = require('../plugins/DefaultPlugins');
 var GetPhysicsPlugins = require('./GetPhysicsPlugins');
 var GetScenePlugins = require('./GetScenePlugins');
-var Plugins = require('../plugins');
 var Settings = require('./Settings');
 
 /**
@@ -111,7 +111,7 @@ var Systems = new Class({
          * [description]
          *
          * @name Phaser.Scenes.Systems#plugins
-         * @type {Phaser.Boot.PluginManager}
+         * @type {Phaser.Plugins.PluginManager}
          * @since 3.0.0
          */
         this.plugins;
@@ -233,13 +233,12 @@ var Systems = new Class({
 
         this.plugins = pluginManager;
 
-        pluginManager.installGlobal(this, Plugins.Global);
+        pluginManager.addToScene(this, DefaultPlugins.Global, [ DefaultPlugins.CoreScene, GetScenePlugins(this), GetPhysicsPlugins(this) ]);
 
-        pluginManager.installLocal(this, Plugins.CoreScene);
-
-        pluginManager.installLocal(this, GetScenePlugins(this));
-
-        pluginManager.installLocal(this, GetPhysicsPlugins(this));
+        // pluginManager.installSceneGlobal(this, DefaultPlugins.Global);
+        // pluginManager.installSceneLocal(this, DefaultPlugins.CoreScene);
+        // pluginManager.installSceneLocal(this, GetScenePlugins(this));
+        // pluginManager.installSceneLocal(this, GetPhysicsPlugins(this));
 
         this.events.emit('boot', this);
 

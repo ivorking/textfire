@@ -10,7 +10,6 @@ var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var PluginManager = require('../../boot/PluginManager');
 
 /**
  * @typedef {object} Phaser.Loader.FileTypes.PluginFileConfig
@@ -18,6 +17,7 @@ var PluginManager = require('../../boot/PluginManager');
  * @property {string} key - The key of the file. Must be unique within the Loader.
  * @property {string} [url] - The absolute or relative URL to load the file from.
  * @property {string} [extension='js'] - The default file extension to use if no url is provided.
+ * @property {boolean} [start=false] - Automatically start the plugin after loading?
  * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 
@@ -38,6 +38,7 @@ var PluginManager = require('../../boot/PluginManager');
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Loader.FileTypes.PluginFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
+ * @param {boolean} [start=false] - Automatically start the plugin after loading?
  * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var PluginFile = new Class({
@@ -46,7 +47,7 @@ var PluginFile = new Class({
 
     initialize:
 
-    function PluginFile (loader, key, url, xhrSettings)
+    function PluginFile (loader, key, url, start, xhrSettings)
     {
         var extension = 'js';
 
@@ -58,26 +59,29 @@ var PluginFile = new Class({
             url = GetFastValue(config, 'url');
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
-        }
-
-        // If the url variable refers to a class, add the plugin directly
-        if (typeof url === 'function')
-        {
-            window[key] = url;
-            window[key].register(PluginManager);
+            start = GetFastValue(config, 'start');
         }
 
         var fileConfig = {
-            type: 'script',
+            type: 'plugin',
             cache: false,
             extension: extension,
             responseType: 'text',
             key: key,
             url: url,
-            xhrSettings: xhrSettings
+            xhrSettings: xhrSettings,
+            config: { start: start }
         };
 
-        File.call(this, fileConfig);
+        File.call(this, loader, fileConfig);
+
+        // If the url variable refers to a class, add the plugin directly
+        if (typeof url === 'function')
+        {
+            this.data = url;
+
+            this.state = CONST.FILE_POPULATED;
+        }
     },
 
     /**
@@ -89,18 +93,30 @@ var PluginFile = new Class({
      */
     onProcess: function ()
     {
-        this.state = CONST.FILE_PROCESSING;
+        var pluginManager = this.loader.systems.plugins;
+        var config = this.config;
 
-        this.data = document.createElement('script');
-        this.data.language = 'javascript';
-        this.data.type = 'text/javascript';
-        this.data.defer = false;
-        this.data.text = this.xhrLoader.responseText;
+        var start = GetFastValue(config, 'start', false);
 
-        document.head.appendChild(this.data);
+        if (this.state === CONST.FILE_POPULATED)
+        {
+            pluginManager.install(this.key, this.data, start);
+        }
+        else
+        {
+            //  Plugin added via a js file
+            this.state = CONST.FILE_PROCESSING;
 
-        //  Need to wait for onload?
-        window[this.key].register(PluginManager);
+            this.data = document.createElement('script');
+            this.data.language = 'javascript';
+            this.data.type = 'text/javascript';
+            this.data.defer = false;
+            this.data.text = this.xhrLoader.responseText;
+
+            document.head.appendChild(this.data);
+
+            pluginManager.install(this.key, window[this.key], start);
+        }
 
         this.onProcessComplete();
     }
@@ -143,7 +159,7 @@ var PluginFile = new Class({
  * Once the file has finished loading it will automatically be converted into a script element
  * via `document.createElement('script')`. It will have its language set to JavaScript, `defer` set to
  * false and then the resulting element will be appended to `document.head`. Any code then in the
- * script will be executed. It will then be passed to the Phaser PluginManager.register method.
+ * script will be executed. It will then be passed to the Phaser PluginCache.register method.
  *
  * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
  *
@@ -159,12 +175,13 @@ var PluginFile = new Class({
  * @since 3.0.0
  *
  * @param {(string|Phaser.Loader.FileTypes.PluginFileConfig|Phaser.Loader.FileTypes.PluginFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
- * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
+ * @param {(string|function)} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js". Or, a plugin function.
+ * @param {boolean} [start] - The plugin mapping configuration object.
  * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
-FileTypesManager.register('plugin', function (key, url, xhrSettings)
+FileTypesManager.register('plugin', function (key, url, start, xhrSettings)
 {
     if (Array.isArray(key))
     {
@@ -176,7 +193,7 @@ FileTypesManager.register('plugin', function (key, url, xhrSettings)
     }
     else
     {
-        this.addFile(new PluginFile(this, key, url, xhrSettings));
+        this.addFile(new PluginFile(this, key, url, start, xhrSettings));
     }
 
     return this;
