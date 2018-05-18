@@ -34,6 +34,8 @@ var background;
 var bulletTime = 300;
 var direction = 1;
 var score = 0;
+var posvar;
+var enemyvar;
 
 var gameOver = false;
 var scoreText;

@@ -113,43 +113,40 @@ class gameloop extends Phaser.Scene {
     
         // score 
         scoreText = this.add.text(5, 5, 'Score:' + score, { fontSize: '20px', fill: '#000' });
-     
+         
         this.physics.world.enable(this.bullets, this.player, enemies);
-        this.physics.add.collider(this.bullets, enemies, this.destroyEnemy, null, this);
-        this.physics.add.collider(this.player, enemies, this.shipCollide, null, this);
-
+        
 
     }
     
     createEnemies () {
+        console.log(enemies);
+
+        if (enemies.length === 0) {
+            enemies = this.physics.add.group();    
+        }
 
         var config = {
             key: 'standard'
         }
-
-
-
+        
         if (score == 0) {
-            enemies = this.physics.add.group();
+
             enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
-
-            // this.physics.add.sprite(winW-20, (Math.floor(Math.random() * Math.floor(winH))), ('boss' + (Math.floor(Math.random() * 6) + 1))).setActive();  
-
-            // this.physics.world.enable(this.bullets, this.player, enemies);
-            // this.physics.add.collider(this.bullets, enemies, this.destroyEnemy, null, this);
-            // this.physics.add.collider(this.player, enemies, this.shipCollide, null, this);
-
+            enemies.setVelocity(-50, 0);
             buildEnemy = false;
-            console.log("first run");
  
         } else {
-            for (let index = 0; index <= score; index++) {
+            let tempvar = enemies.children.entries.length + 2;
+            for (let index = 0; index <= tempvar; index++) {
                 enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
-           
+                enemies.setVelocity(-50, 0);
             }
             buildEnemy = false;
-        }
 
+        }
+        this.physics.add.collider(this.bullets, enemies, this.destroyEnemy, null, this);
+        this.physics.add.collider(this.player, enemies, this.shipCollide, null, this);
     };
     
     update (time, delta) {
@@ -199,7 +196,7 @@ class gameloop extends Phaser.Scene {
         }
     
         background.tilePositionX += 0.5;
-        console.log(buildEnemy);
+
         if (buildEnemy) { this.createEnemies() };
     }
     
@@ -212,12 +209,17 @@ class gameloop extends Phaser.Scene {
         this.player.disableBody(true, true);
     }
     
-    destroyEnemy () {
+    destroyEnemy (bulletvar, enemyvar) {
+
+
         explosion = this.sound.add('explosion');
         explosion.play();
-    
+        posvar = enemies.children.entries.indexOf(enemyvar);
+        enemies.children.entries[posvar].disableBody(true, true);
+        enemies.children.entries[posvar].destroy();
+
         console.log("Enemy destroyed!");
-        enemies.children.entries[0].disableBody(true, true);
+
         score++;
         scoreText.setText('Score: ' + score);
 
