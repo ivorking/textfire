@@ -116,7 +116,6 @@ class gameloop extends Phaser.Scene {
          
         this.physics.world.enable(this.bullets, this.player, enemies);
         
-
     }
     
     createEnemies () {
@@ -129,22 +128,22 @@ class gameloop extends Phaser.Scene {
         var config = {
             key: 'standard'
         }
-        
+        let spawnVar = Phaser.Math.RND.integerInRange(1, 6)        
         if (score == 0) {
+
+
 
             enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
             enemies.setVelocity(-50, 0);
             buildEnemy = false;
  
         } else {
-            let tempvar = enemies.children.entries.length + 2;
-            for (let index = 0; index <= tempvar; index++) {
+            for (let index = 0; index <= spawnVar; index++) {
                 enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
                 enemies.setVelocity(-50, 0);
             }
             buildEnemy = false;
-
-        }
+         }
         this.physics.add.collider(this.bullets, enemies, this.destroyEnemy, null, this);
         this.physics.add.collider(this.player, enemies, this.shipCollide, null, this);
     };
@@ -204,19 +203,20 @@ class gameloop extends Phaser.Scene {
         explosion = this.sound.add('explosion');
         explosion.play();
     
-        console.log("Ships collide!");
+        console.log("Ships collide! Game over!");
         this.enemies.children.entries[0].disableBody(true, true);
         this.player.disableBody(true, true);
     }
     
     destroyEnemy (bulletvar, enemyvar) {
 
-
         explosion = this.sound.add('explosion');
         explosion.play();
         posvar = enemies.children.entries.indexOf(enemyvar);
         enemies.children.entries[posvar].disableBody(true, true);
         enemies.children.entries[posvar].destroy();
+        posvar = this.bullets.children.entries.indexOf(bulletvar);
+        this.bullets.children.entries[posvar].destroy();
 
         console.log("Enemy destroyed!");
 
@@ -225,8 +225,5 @@ class gameloop extends Phaser.Scene {
 
         buildEnemy = true;
 
-
     }
-    
-    
 }
