@@ -22,10 +22,8 @@ var config = {
                 thickness: 32
             }
         }
-    // },
-    // audio: {
-    //     disableWebAudio: true
     },
+
     scene: [ startpage, gameloop, endpage]
 
 };
