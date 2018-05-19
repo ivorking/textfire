@@ -2,8 +2,9 @@ html, body {
     height: 100%;
     padding: 0;
     margin: 0;
-    background: rgb(255, 255, 255);
-  }
+    /* background: linear-gradient(rgb(255, 255, 126), rgb(255, 73, 73)); */
+    background: linear-gradient(to bottom, rgba(127,195,244,1) 0%,rgba(255,178,112,1) 100%,rgba(255,210,170,1) 100%,rgba(255,128,2,1) 100%);
+}
   
 canvas {
     position: absolute;

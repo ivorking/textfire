@@ -218,3 +218,8 @@ WORKING
 
             buildEnemy = false;
             console.log("first run");
+
+            let explosionanime = this.add.sprite(enemies.children.entries[posvar].x, enemies.children.entries[posvar].y, 'explosionsheet');
+            explosionanime.anchor.setTo(0.5, 0.5);
+            explosionanime.animations.add('boom');
+            explosionanime.play('boom', 15, false, true);

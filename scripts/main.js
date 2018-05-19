@@ -8,7 +8,7 @@ var config = {
     width: winW,
     height: winH,
     parent: 'phaser-example',
-    backgroundColor: '#ffffff',
+    transparent: true,
     title: 'textFIRE',
     physics: {
         default: 'arcade',
@@ -35,6 +35,9 @@ var score = 0;
 var posvar;
 var enemyvar;
 var hardcounter = 0;
+var rotatevar = [];
+var boom;
+var tempvar = 0;
 
 var gameOver = false;
 var scoreText;
