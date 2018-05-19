@@ -136,6 +136,7 @@ class gameloop extends Phaser.Scene {
             enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
             enemies.setVelocity(-50, 0);
             buildEnemy = false;
+            enemies.children.entries[0]._rotation = 10;
  
         } else {
             for (index = 0; index < spawnVar; index++) {
@@ -145,18 +146,21 @@ class gameloop extends Phaser.Scene {
             }
             buildEnemy = false;
         }
+        enemies.children.entries._rotation = 10;
+
         enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'hardship').setActive();
         currentEnemies = enemies.children.entries.length;
         enemies.children.entries[currentEnemies - 1].setVelocity(-80, 0);
 
         this.physics.add.collider(this.bullets, enemies, this.destroyEnemy, null, this);
         this.physics.add.collider(this.player, enemies, this.shipCollide, null, this);
+        // enemies.sprite.setRotation(20);
     };
     
     update (time, delta) {
     
         // player ship controls
-    
+        
         if (this.cursors.left.isDown)
         {
             this.player.setVelocityX(-160);
@@ -202,6 +206,7 @@ class gameloop extends Phaser.Scene {
         background.tilePositionX += 0.5;
 
         if (buildEnemy) { this.createEnemies() };
+        enemies.children.entries[0]._rotation += 0.05;
     }
     
     shipCollide (crashvar) {
