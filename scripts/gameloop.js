@@ -1,6 +1,5 @@
 // main gameloop
 
-
 class gameloop extends Phaser.Scene {
 
     constructor() {
@@ -17,6 +16,7 @@ class gameloop extends Phaser.Scene {
         this.load.image('boss4', './assets/boss4.png');
         this.load.image('boss5', './assets/boss5.png');
         this.load.image('boss6', './assets/boss6.png');
+        this.load.image('hardship', './assets/hardship.png');
         this.load.image('starfield', './assets/starfield.png');
         this.load.image('star2', './assets/star2.png');
         this.load.image('star3', './assets/star3.png');
@@ -118,8 +118,6 @@ class gameloop extends Phaser.Scene {
     }
     
     createEnemies () {
-        console.log(enemies);
-
         if (enemies.length === 0) {
             enemies = this.physics.add.group();    
         }
@@ -131,6 +129,7 @@ class gameloop extends Phaser.Scene {
         let spawnVar = Phaser.Math.RND.integerInRange(1, 6);
         let speedVar;
         let currentEnemies = enemies.children.entries.length;
+        let index = 0;
         
         if (score == 0) {
 
@@ -139,15 +138,17 @@ class gameloop extends Phaser.Scene {
             buildEnemy = false;
  
         } else {
-            for (let index = 0; index <= spawnVar; index++) {
+            for (index = 0; index < spawnVar; index++) {
                 enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
-                speedVar = Phaser.Math.RND.integerInRange(40, 70);
-                console.log(enemies.children.entries.length);
-                console.log(speedVar);
-                enemies.children.entries[currentEnemies-1 + index].setVelocity(-speedVar, 0);
+                speedVar = Phaser.Math.RND.integerInRange(40, 80);
+                enemies.children.entries[currentEnemies + index].setVelocity(-speedVar, 0);
             }
             buildEnemy = false;
-         }
+        }
+        enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'hardship').setActive();
+        currentEnemies = enemies.children.entries.length;
+        enemies.children.entries[currentEnemies - 1].setVelocity(-80, 0);
+
         this.physics.add.collider(this.bullets, enemies, this.destroyEnemy, null, this);
         this.physics.add.collider(this.player, enemies, this.shipCollide, null, this);
     };
@@ -206,28 +207,50 @@ class gameloop extends Phaser.Scene {
     shipCollide (crashvar) {
         explosion = this.sound.add('explosion');
         explosion.play();
-        debugger;
+
         this.enemies.children.entries[0].disableBody(true, true);
         this.player.disableBody(true, true);
+        console.log("Ship destroyed!");
 
     }
     
     destroyEnemy (bulletvar, enemyvar) {
 
-        explosion = this.sound.add('explosion');
-        explosion.play();
-
-        posvar = enemies.children.entries.indexOf(enemyvar);
-        enemies.children.entries[posvar].disableBody(true, true);
-        enemies.children.entries[posvar].destroy();
-
-        posvar = this.bullets.children.entries.indexOf(bulletvar);
-        this.bullets.children.entries[posvar].destroy();
-        console.log("Enemy destroyed!");
-        score++;
-
-        scoreText.setText('Score: ' + score);
-        buildEnemy = true;
-
+        console.log(hardcounter);
+        if (enemyvar.texture.key == "hardship") {
+            hardcounter ++;
+            if (hardcounter == 4) {
+                explosion = this.sound.add('explosion');
+                explosion.play();
+        
+                posvar = enemies.children.entries.indexOf(enemyvar);
+                enemies.children.entries[posvar].disableBody(true, true);
+                enemies.children.entries[posvar].destroy();
+        
+                console.log("Enemy destroyed!");
+                score += 4;
+        
+                scoreText.setText('Score: ' + score);
+                buildEnemy = true;
+                hardcounter = 0;
+            }
+            posvar = this.bullets.children.entries.indexOf(bulletvar);
+            this.bullets.children.entries[posvar].destroy();
+        } else {
+            explosion = this.sound.add('explosion');
+            explosion.play();
+    
+            posvar = enemies.children.entries.indexOf(enemyvar);
+            enemies.children.entries[posvar].disableBody(true, true);
+            enemies.children.entries[posvar].destroy();
+    
+            posvar = this.bullets.children.entries.indexOf(bulletvar);
+            this.bullets.children.entries[posvar].destroy();
+            console.log("Enemy destroyed!");
+            score++;
+    
+            scoreText.setText('Score: ' + score);
+            buildEnemy = true;
+        }
     }
 }
