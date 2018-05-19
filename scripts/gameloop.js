@@ -129,7 +129,8 @@ class gameloop extends Phaser.Scene {
         }
 
         let spawnVar = Phaser.Math.RND.integerInRange(1, 6);
-        let speedVar = Phaser.Math.RND.integerInRange(40, 70);
+        let speedVar;
+        let currentEnemies = enemies.children.entries.length;
         
         if (score == 0) {
 
@@ -140,7 +141,10 @@ class gameloop extends Phaser.Scene {
         } else {
             for (let index = 0; index <= spawnVar; index++) {
                 enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
-                enemies.setVelocity(speedVar, 0);
+                speedVar = Phaser.Math.RND.integerInRange(40, 70);
+                console.log(enemies.children.entries.length);
+                console.log(speedVar);
+                enemies.children.entries[currentEnemies-1 + index].setVelocity(-speedVar, 0);
             }
             buildEnemy = false;
          }
