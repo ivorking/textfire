@@ -148,13 +148,15 @@ class gameloop extends Phaser.Scene {
         }
         enemies.children.entries._rotation = 10;
 
+        // create hard to kill enemy, moves faster
+
         enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'hardship').setActive();
         currentEnemies = enemies.children.entries.length;
         enemies.children.entries[currentEnemies - 1].setVelocity(-80, 0);
 
         this.physics.add.collider(this.bullets, enemies, this.destroyEnemy, null, this);
         this.physics.add.collider(this.player, enemies, this.shipCollide, null, this);
-        // enemies.sprite.setRotation(20);
+
     };
     
     update (time, delta) {
