@@ -24,7 +24,7 @@ var config = {
         }
     },
 
-    scene: [ startpage, gameloop, endpage]
+    scene: [ startpage, gameloop, endpage ]
 
 };
 
@@ -34,6 +34,7 @@ var direction = 1;
 var score = 0;
 var posvar;
 var enemyvar;
+var hardcounter = 0;
 
 var gameOver = false;
 var scoreText;
