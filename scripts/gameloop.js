@@ -4,7 +4,6 @@ class gameloop extends Phaser.Scene {
 
     constructor() {
         super ({key: "gameloop"});
-
     }
 
     preload () {
@@ -22,7 +21,7 @@ class gameloop extends Phaser.Scene {
         this.load.image('star3', './assets/star3.png');
         this.load.image('star4', './assets/star4.png');
         this.load.spritesheet('explosionsource', './assets/explosionsheet2.png', { frameWidth: 64, frameHeight: 64, endFrame: 23 });
-                
+
         this.load.audio('song', './assets/sounds/music.mp3');
         this.load.audio('gunfire', './assets/sounds/gun.mp3');
         this.load.audio('explosion', './assets/sounds/explosion.mp3');
@@ -84,7 +83,8 @@ class gameloop extends Phaser.Scene {
         background = this.add.tileSprite(0, 0, winW * 3, winH * 2, 'starfield');
       
         this.bullets.enableBody = true;
-        this.createEnemies();
+
+        // player animations (future feature to be enabled)
 
         this.anims.create({
             key: 'left',
@@ -128,12 +128,13 @@ class gameloop extends Phaser.Scene {
             hideOnComplete: true
         });
 
+        this.createEnemies();
+
     }
-    
+
     createEnemies () {
         if (enemies.length === 0) {
             enemies = this.physics.add.group();
-            enemies.autoCull = true;    
         }
 
         var config = {
@@ -173,10 +174,8 @@ class gameloop extends Phaser.Scene {
         this.physics.add.collider(this.bullets, enemies, this.destroyEnemy, null, this);
         this.physics.add.collider(this.player, enemies, this.shipCollide, null, this);
 
-        console.log(enemies.children.entries.length);
-
     };
-    
+
     update (time, delta) {
     
         // player ship controls
@@ -259,41 +258,20 @@ class gameloop extends Phaser.Scene {
 
         for (let index = 0; index < enemies.children.entries.length; index++) {
             if (enemies.children.entries[index].x < -30) {
-                enemies.children.entries[index].disableBody(true, true);
-                enemies.children.entries[index].destroy();
-
-                console.log('destroying sprite offscreen:', index);
-                console.log('rotatevar now: ', rotatevar);
-                // clean the ship out of rotatevar if it is there
-
-                for (let index1 = 0; index1 < rotatevar.length; index1++) {
-                    tempvar = rotatevar[index1];
-                    console.log('rotatevar now: ', rotatevar);
-                    if (tempvar == index) {
-                        
-                        console.log('match in rotatevar - cleaning rotatevar'); 
-
-                        for (let index2 = 0; index2 < rotatevar.length; index2++) {
-                            if (rotatevar[index2] > index) {
-                                console.log('resetting order');
-                                rotatevar[index2] -= 1;
-                            }
-                        }
-
-                        rotatevar.splice(index1, 1);
-                        console.log('rotatevar after clean: ', rotatevar);
-                    }      
-                             
-                }
-
+                this.shipCleaner(index);
             } 
         }
 
-        // update rotations
+        // update rotations for remaining ships on screen
 
         for (let index = 0; index < rotatevar.length; index++) {
             tempvar = rotatevar[index];
+
             enemies.children.entries[tempvar]._rotation += 0.05;            
+        }
+
+        if (enemies.children.entries.length == 0) {
+            this.createEnemies();
         }
     }
     
@@ -303,9 +281,7 @@ class gameloop extends Phaser.Scene {
 
         this.enemies.children.entries[0].disableBody(true, true);
         this.player.disableBody(true, true);
-        console.log("Ship destroyed!");
-
-    }
+    };
     
     destroyEnemy (bulletvar, enemyvar) {
 
@@ -322,27 +298,9 @@ class gameloop extends Phaser.Scene {
                 boom = this.add.sprite(enemies.children.entries[posvar].x, enemies.children.entries[posvar].y, 'boom');
                 boom.anims.play('explode');
 
-                // destroy enemy ship
+                // remove dead ship
 
-                enemies.children.entries[posvar].disableBody(true, true);
-                enemies.children.entries[posvar].destroy();
-
-                // remove dead ship from rotation array
-
-                for (let index = 0; index < rotatevar.length; index++) {
-                    tempvar = rotatevar[index];
-                    if (tempvar == index) {
-                        console.log('cleaning rotatevar'); 
-
-                        for (let index1 = 0; index1 < rotatevar.length; index1++) {
-                            if (rotatevar[index1] > index) {
-                                rotatevar[index1] -= 1;
-                            }
-                        }
-
-                        rotatevar.splice(index, 1);
-                    }
-                }
+                this.shipCleaner(posvar);
 
                 score += 4;
         
@@ -364,29 +322,9 @@ class gameloop extends Phaser.Scene {
             boom = this.add.sprite(enemies.children.entries[posvar].x, enemies.children.entries[posvar].y, 'boom');
             boom.anims.play('explode');
 
-            // disable enemy ship
+            // remove dead ship
 
-            enemies.children.entries[posvar].disableBody(true, true);
-            enemies.children.entries[posvar].destroy();
-
-            // remove dead ship from rotation array
-
-
-            for (let index = 0; index < rotatevar.length; index++) {
-                tempvar = rotatevar[index];
-                if (tempvar == index) {
-                    console.log('cleaning rotatevar'); 
-
-                    for (let index1 = 0; index1 < rotatevar.length; index1++) {
-                        if (rotatevar[index1] > index) {
-                            console.log('resetting order');
-                            rotatevar[index1] -= 1;
-                        }
-                    }
-
-                    rotatevar.splice(index, 1);
-                }
-            }
+            this.shipCleaner(posvar);
 
             posvar = this.bullets.children.entries.indexOf(bulletvar);
             this.bullets.children.entries[posvar].destroy();
@@ -398,4 +336,32 @@ class gameloop extends Phaser.Scene {
         }
     }
 
-}
+    shipCleaner(posvar) {
+
+        // remove dead ship from rotation array
+
+        for (let index = 0; index < rotatevar.length; index++) {
+            tempvar = rotatevar[index];
+            if (tempvar == posvar) {
+                rotatevar.splice(index, 1);
+            }
+        }
+
+        // update rotatevar given that ships moved to the left in array
+
+        tempvar = enemies.children.entries.length - posvar;
+
+        for (let index1 = 0; index1 < rotatevar.length; index1++) {
+            if (rotatevar[index1] > posvar) {
+                rotatevar[index1] -= 1;
+            }
+        }
+
+        // destroy ship
+
+        enemies.children.entries[posvar].disableBody(true, true);
+        enemies.children.entries[posvar].destroy();
+
+    }
+
+};

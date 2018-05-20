@@ -24,7 +24,7 @@ var config = {
         }
     },
 
-    scene: [ startpage, gameloop, endpage ]
+    scene: [ startpage, gameloop, endpage ],
 
 };
 
