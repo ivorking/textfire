@@ -38,6 +38,7 @@ var hardcounter = 0;
 var rotatevar = [];
 var boom;
 var tempvar = 0;
+var pausekey;
 
 var gameOver = false;
 var scoreText;

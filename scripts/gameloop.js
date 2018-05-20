@@ -169,6 +169,10 @@ class gameloop extends Phaser.Scene {
         this.initField();
         this.drawField();
 
+        // pause listeer
+
+        this.pausekey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
+
     }
 
     createEnemies () {
@@ -315,6 +319,12 @@ class gameloop extends Phaser.Scene {
         }
 
         this.drawField();
+
+        if (this.pausekey.isDown) {
+            if (game.loop.running) {
+                game.loop.stop()
+            }
+        }
     }
     
     shipCollide (crashvar) {
@@ -417,7 +427,7 @@ class gameloop extends Phaser.Scene {
     drawField () {
         ctx.clearRect(0, 0, winW, winH);
         ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-        ctx.fillRect (0, 0, winW, winH);
+        // ctx.fillRect (0, 0, winW, winH);
         for (let f=0;f<stars.length;f++) {
            stars[f].UpdateField();
            stars[f].Draw();
