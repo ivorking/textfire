@@ -1,10 +1,41 @@
 // main gameloop
 
+class Star {
+
+    constructor (X,Y,Velocity,Opacity) 
+    {
+        this.X = Math.random()*winW;
+        this.Y = Math.random()*winH;
+        this.Velocity = this.getRandFloat(0.2, 1) * maxVelocity;
+        this.Opacity = ((Math.random() * 10) + 1 ) * 0.1;
+    }
+
+    Draw () {
+        ctx.fillStyle = "rgba(0,0,0," + this.Opacity + ")";
+        if (Math.round((Math.random()*twinkleFreq))==1) {
+            ctx.fillRect(this.X,this.Y,starSize+2,starSize+2);
+        } else {
+            ctx.fillRect(this.X,this.Y,starSize,starSize);
+        }
+    };
+
+    UpdateField () {
+        this.X -= this.Velocity;
+        if (this.X < 0){
+            this.X = winW + 1;
+        }
+    };
+
+    getRandFloat (min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+};
+
 class gameloop extends Phaser.Scene {
 
     constructor() {
         super ({key: "gameloop"});
-
     }
 
     preload () {
@@ -21,7 +52,8 @@ class gameloop extends Phaser.Scene {
         this.load.image('star2', './assets/star2.png');
         this.load.image('star3', './assets/star3.png');
         this.load.image('star4', './assets/star4.png');
-    
+        this.load.spritesheet('explosionsource', './assets/explosionsheet2.png', { frameWidth: 64, frameHeight: 64, endFrame: 23 });
+
         this.load.audio('song', './assets/sounds/music.mp3');
         this.load.audio('gunfire', './assets/sounds/gun.mp3');
         this.load.audio('explosion', './assets/sounds/explosion.mp3');
@@ -40,7 +72,9 @@ class gameloop extends Phaser.Scene {
         this.player.setCollideWorldBounds(true);
         
         // bullet setup
+
         this.lastFired = 0;
+
         var Bullet = new Phaser.Class({
     
             Extends: Phaser.GameObjects.Image,
@@ -79,10 +113,13 @@ class gameloop extends Phaser.Scene {
             runChildUpdate: true
         });
     
-        background = this.add.tileSprite(0, 0, winW * 3, winH * 2, 'starfield');
+        // plain starfield - faster but less impressive:
+        // background = this.add.tileSprite(0, 0, winW * 3, winH * 2, 'starfield');
       
         this.bullets.enableBody = true;
-        this.createEnemies();
+
+        // player animations (future feature to be enabled)
+
         this.anims.create({
             key: 'left',
             frames: [ { key: 'ship', frame: 0 } ],
@@ -112,14 +149,32 @@ class gameloop extends Phaser.Scene {
         });
     
         // score 
+
         scoreText = this.add.text(5, 5, 'Score:' + score, { fontSize: '20px', fill: '#000' });
         this.physics.world.enable(this.bullets, this.player, enemies);
         
+        // explosion animation
+
+        this.anims.create({
+            key: 'explode',
+            frames: this.anims.generateFrameNumbers('explosionsource', { start: 0, end: 23, first: 23 }),
+            frameRate: 20,
+            hideOnComplete: true
+        });
+
+        this.createEnemies();
+
+        // starfield setup
+
+        this.initField();
+        this.drawField();
+
     }
-    
+
     createEnemies () {
+
         if (enemies.length === 0) {
-            enemies = this.physics.add.group();    
+            enemies = this.physics.add.group();
         }
 
         var config = {
@@ -132,55 +187,87 @@ class gameloop extends Phaser.Scene {
         let index = 0;
         
         if (score == 0) {
-
             enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
             enemies.setVelocity(-50, 0);
             buildEnemy = false;
-            enemies.children.entries[0]._rotation = 10;
- 
         } else {
             for (index = 0; index < spawnVar; index++) {
                 enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
-                speedVar = Phaser.Math.RND.integerInRange(40, 80);
+                speedVar = Phaser.Math.RND.integerInRange(30, 115);
                 enemies.children.entries[currentEnemies + index].setVelocity(-speedVar, 0);
+                if ((currentEnemies + index) % 3 == 0) {
+                    enemies.children.entries[currentEnemies + index]._rotation = 8;
+                    rotatevar.push(currentEnemies + index);
+                }
             }
             buildEnemy = false;
         }
-        enemies.children.entries._rotation = 10;
+
+        // create hard to kill enemy, moves faster
 
         enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'hardship').setActive();
         currentEnemies = enemies.children.entries.length;
         enemies.children.entries[currentEnemies - 1].setVelocity(-80, 0);
 
+        // include colliders
+
         this.physics.add.collider(this.bullets, enemies, this.destroyEnemy, null, this);
         this.physics.add.collider(this.player, enemies, this.shipCollide, null, this);
-        // enemies.sprite.setRotation(20);
+
     };
-    
+
     update (time, delta) {
     
         // player ship controls
         
-        if (this.cursors.left.isDown)
+        if (this.cursors.right.isDown && this.cursors.down.isDown)
+        {
+            this.player.setVelocityX(160);
+            this.player.setVelocityY(160);
+            // this.player.anims.play('right', true);
+        }
+        else if (this.cursors.right.isDown && this.cursors.up.isDown)
+        {
+            this.player.setVelocityX(160);
+            this.player.setVelocityY(-160);
+            // this.player.anims.play('up', true);
+        }
+        else if (this.cursors.left.isDown && this.cursors.down.isDown)
         {
             this.player.setVelocityX(-160);
-            this.player.anims.play('left', true);
+            this.player.setVelocityY(160);
+            // this.player.anims.play('down', true);
+        }
+        else if (this.cursors.left.isDown && this.cursors.up.isDown)
+        {
+            this.player.setVelocityX(-160);
+            this.player.setVelocityY(-160);
+            // this.player.anims.play('down', true);
+        }
+        else if (this.cursors.left.isDown)
+        {
+            this.player.setVelocityX(-160);
+            this.player.setVelocityY(0);
+            // this.player.anims.play('left', true);
         }
         else if (this.cursors.right.isDown)
         {
             this.player.setVelocityX(160);
-            this.player.anims.play('right', true);
+            this.player.setVelocityY(0);
+            // this.player.anims.play('right', true);
         }
         else if (this.cursors.up.isDown)
         {
             this.player.setVelocityY(-160);
-            this.player.anims.play('up', true);
+            this.player.setVelocityX(0);
+            // this.player.anims.play('up', true);
         }
         else if (this.cursors.down.isDown)
         {
             this.player.setVelocityY(160);
-            this.player.anims.play('down', true);
-        }
+            this.player.setVelocityX(0);
+            // this.player.anims.play('down', true);
+        } 
         else
         {
             this.player.setVelocityX(0);
@@ -203,10 +290,31 @@ class gameloop extends Phaser.Scene {
             }
         }
     
-        background.tilePositionX += 0.5;
+        // plain starfield:
+        // background.tilePositionX += 0.5;
 
         if (buildEnemy) { this.createEnemies() };
-        enemies.children.entries[0]._rotation += 0.05;
+
+        // garbage collection - remove sprites going off the screen
+
+        for (let index = 0; index < enemies.children.entries.length; index++) {
+            if (enemies.children.entries[index].x < -30) {
+                this.shipCleaner(index);
+            } 
+        }
+
+        // update rotations for remaining ships on screen
+
+        for (let index = 0; index < rotatevar.length; index++) {
+            tempvar = rotatevar[index];
+            enemies.children.entries[tempvar]._rotation += 0.05;            
+        }
+
+        if (enemies.children.entries.length == 0) {
+            this.createEnemies();
+        }
+
+        this.drawField();
     }
     
     shipCollide (crashvar) {
@@ -215,13 +323,10 @@ class gameloop extends Phaser.Scene {
 
         this.enemies.children.entries[0].disableBody(true, true);
         this.player.disableBody(true, true);
-        console.log("Ship destroyed!");
-
-    }
+    };
     
     destroyEnemy (bulletvar, enemyvar) {
 
-        console.log(hardcounter);
         if (enemyvar.texture.key == "hardship") {
             hardcounter ++;
             if (hardcounter == 4) {
@@ -229,10 +334,16 @@ class gameloop extends Phaser.Scene {
                 explosion.play();
         
                 posvar = enemies.children.entries.indexOf(enemyvar);
-                enemies.children.entries[posvar].disableBody(true, true);
-                enemies.children.entries[posvar].destroy();
-        
-                console.log("Enemy destroyed!");
+
+                // explosion animation
+
+                boom = this.add.sprite(enemies.children.entries[posvar].x, enemies.children.entries[posvar].y, 'boom');
+                boom.anims.play('explode');
+
+                // remove dead ship
+
+                this.shipCleaner(posvar);
+
                 score += 4;
         
                 scoreText.setText('Score: ' + score);
@@ -241,21 +352,76 @@ class gameloop extends Phaser.Scene {
             }
             posvar = this.bullets.children.entries.indexOf(bulletvar);
             this.bullets.children.entries[posvar].destroy();
+
         } else {
             explosion = this.sound.add('explosion');
             explosion.play();
-    
+
             posvar = enemies.children.entries.indexOf(enemyvar);
-            enemies.children.entries[posvar].disableBody(true, true);
-            enemies.children.entries[posvar].destroy();
-    
+
+            // explosion animation
+
+            boom = this.add.sprite(enemies.children.entries[posvar].x, enemies.children.entries[posvar].y, 'boom');
+            boom.anims.play('explode');
+
+            // remove dead ship
+
+            this.shipCleaner(posvar);
+
             posvar = this.bullets.children.entries.indexOf(bulletvar);
             this.bullets.children.entries[posvar].destroy();
-            console.log("Enemy destroyed!");
             score++;
     
             scoreText.setText('Score: ' + score);
             buildEnemy = true;
+
         }
     }
-}
+
+    shipCleaner(posvar) {
+
+        // remove dead ship from rotation array
+
+        for (let index = 0; index < rotatevar.length; index++) {
+            tempvar = rotatevar[index];
+            if (tempvar == posvar) {
+                rotatevar.splice(index, 1);
+            }
+        }
+
+        // update rotatevar given that ships moved to the left in array
+
+        tempvar = enemies.children.entries.length - posvar;
+
+        for (let index1 = 0; index1 < rotatevar.length; index1++) {
+            if (rotatevar[index1] > posvar) {
+                rotatevar[index1] -= 1;
+            }
+        }
+
+        // destroy ship
+
+        enemies.children.entries[posvar].disableBody(true, true);
+        enemies.children.entries[posvar].destroy();
+
+    }
+
+    // STAR FUNCTIONS
+
+    initField () {
+        for(let i=0; i<totalObjects; i++) {
+            stars.push(new Star());
+        }
+    }
+      
+    drawField () {
+        ctx.clearRect(0, 0, winW, winH);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+        ctx.fillRect (0, 0, winW, winH);
+        for (let f=0;f<stars.length;f++) {
+           stars[f].UpdateField();
+           stars[f].Draw();
+        }
+    }
+
+};

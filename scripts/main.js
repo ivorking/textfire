@@ -8,7 +8,7 @@ var config = {
     width: winW,
     height: winH,
     parent: 'phaser-example',
-    backgroundColor: '#ffffff',
+    transparent: true,
     title: 'textFIRE',
     physics: {
         default: 'arcade',
@@ -24,7 +24,7 @@ var config = {
         }
     },
 
-    scene: [ startpage, gameloop, endpage ]
+    scene: [ startpage, gameloop, endpage ],
 
 };
 
@@ -35,6 +35,9 @@ var score = 0;
 var posvar;
 var enemyvar;
 var hardcounter = 0;
+var rotatevar = [];
+var boom;
+var tempvar = 0;
 
 var gameOver = false;
 var scoreText;
@@ -45,6 +48,18 @@ var buildEnemy = true;
 var music;
 var gunfire;
 var explosion;
+
+// starvars
+
+var totalObjects = 600;
+var maxVelocity = 2;
+var starSize = 1.5;
+var twinkleFreq = 50000;
+var canvas = document.getElementById('field');
+canvas.width = winW;
+canvas.height = winH;
+var ctx = canvas.getContext("2d");
+var stars = [];
 
 var game = new Phaser.Game(config);
 
