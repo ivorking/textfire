@@ -49,6 +49,18 @@ var music;
 var gunfire;
 var explosion;
 
+// starvars
+
+var totalObjects = 600;
+var maxVelocity = 2;
+var starSize = 1.5;
+var twinkleFreq = 50000;
+var canvas = document.getElementById('field');
+canvas.width = winW;
+canvas.height = winH;
+var ctx = canvas.getContext("2d");
+var stars = [];
+
 var game = new Phaser.Game(config);
 
 

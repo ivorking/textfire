@@ -1,5 +1,37 @@
 // main gameloop
 
+class Star {
+
+    constructor (X,Y,Velocity,Opacity) 
+    {
+        this.X = Math.random()*winW;
+        this.Y = Math.random()*winH;
+        this.Velocity = this.getRandFloat(0.2, 1) * maxVelocity;
+        this.Opacity = ((Math.random() * 10) + 1 ) * 0.1;
+    }
+
+    Draw () {
+        ctx.fillStyle = "rgba(0,0,0," + this.Opacity + ")";
+        if (Math.round((Math.random()*twinkleFreq))==1) {
+            ctx.fillRect(this.X,this.Y,starSize+2,starSize+2);
+        } else {
+            ctx.fillRect(this.X,this.Y,starSize,starSize);
+        }
+    };
+
+    UpdateField () {
+        this.X -= this.Velocity;
+        if (this.X < 0){
+            this.X = winW + 1;
+        }
+    };
+
+    getRandFloat (min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+};
+
 class gameloop extends Phaser.Scene {
 
     constructor() {
@@ -42,6 +74,7 @@ class gameloop extends Phaser.Scene {
         // bullet setup
 
         this.lastFired = 0;
+
         var Bullet = new Phaser.Class({
     
             Extends: Phaser.GameObjects.Image,
@@ -80,7 +113,8 @@ class gameloop extends Phaser.Scene {
             runChildUpdate: true
         });
     
-        background = this.add.tileSprite(0, 0, winW * 3, winH * 2, 'starfield');
+        // plain starfield - faster but less impressive:
+        // background = this.add.tileSprite(0, 0, winW * 3, winH * 2, 'starfield');
       
         this.bullets.enableBody = true;
 
@@ -130,9 +164,15 @@ class gameloop extends Phaser.Scene {
 
         this.createEnemies();
 
+        // starfield setup
+
+        this.initField();
+        this.drawField();
+
     }
 
     createEnemies () {
+
         if (enemies.length === 0) {
             enemies = this.physics.add.group();
         }
@@ -250,7 +290,8 @@ class gameloop extends Phaser.Scene {
             }
         }
     
-        background.tilePositionX += 0.5;
+        // plain starfield:
+        // background.tilePositionX += 0.5;
 
         if (buildEnemy) { this.createEnemies() };
 
@@ -266,13 +307,14 @@ class gameloop extends Phaser.Scene {
 
         for (let index = 0; index < rotatevar.length; index++) {
             tempvar = rotatevar[index];
-
             enemies.children.entries[tempvar]._rotation += 0.05;            
         }
 
         if (enemies.children.entries.length == 0) {
             this.createEnemies();
         }
+
+        this.drawField();
     }
     
     shipCollide (crashvar) {
@@ -362,6 +404,24 @@ class gameloop extends Phaser.Scene {
         enemies.children.entries[posvar].disableBody(true, true);
         enemies.children.entries[posvar].destroy();
 
+    }
+
+    // STAR FUNCTIONS
+
+    initField () {
+        for(let i=0; i<totalObjects; i++) {
+            stars.push(new Star());
+        }
+    }
+      
+    drawField () {
+        ctx.clearRect(0, 0, winW, winH);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+        ctx.fillRect (0, 0, winW, winH);
+        for (let f=0;f<stars.length;f++) {
+           stars[f].UpdateField();
+           stars[f].Draw();
+        }
     }
 
 };
