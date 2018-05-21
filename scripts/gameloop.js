@@ -48,6 +48,13 @@ class gameloop extends Phaser.Scene {
         this.load.image('boss4', './assets/boss4.png');
         this.load.image('boss5', './assets/boss5.png');
         this.load.image('boss6', './assets/boss6.png');
+        this.load.image('boss7', './assets/boss7.png');
+        this.load.image('boss8', './assets/boss8.png');
+        this.load.image('boss9', './assets/boss9.png');
+        this.load.image('boss10', './assets/boss10.png');
+        this.load.image('boss11', './assets/boss11.png');
+        this.load.image('boss12', './assets/boss12.png');
+        this.load.image('safety', './assets/safety.png');
         this.load.image('hardship', './assets/hardship.png');
         this.load.image('starfield', './assets/starfield.png');
         this.load.image('star2', './assets/star2.png');
@@ -92,7 +99,7 @@ class gameloop extends Phaser.Scene {
     
             fire: function (player)
             {
-                this.setPosition(player.x, player.y);
+                this.setPosition(player.x + 70, player.y);
                 this.born = 0;
             },
     
@@ -209,12 +216,12 @@ class gameloop extends Phaser.Scene {
         let index = 0;
         
         if (score == 0) {
-            enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+            enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
             enemies.setVelocity(-50, 0);
             buildEnemy = false;
         } else {
             for (index = 0; index < spawnVar; index++) {
-                enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 5))).setActive();
+                enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
                 speedVar = Phaser.Math.RND.integerInRange(30, 115);
                 enemies.children.entries[currentEnemies + index].setVelocity(-speedVar, 0);
                 if ((currentEnemies + index) % 3 == 0) {
@@ -230,6 +237,11 @@ class gameloop extends Phaser.Scene {
         enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'hardship').setActive();
         currentEnemies = enemies.children.entries.length;
         enemies.children.entries[currentEnemies - 1].setVelocity(-80, 0);
+
+        enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'safety').setActive();
+        currentEnemies = enemies.children.entries.length;
+        enemies.children.entries[currentEnemies - 1].setVelocity(-40, 0);
+        // enemies.children.entries[currentEnemies - 1].setScale(2, 2);
 
         // include colliders
 
@@ -394,15 +406,20 @@ class gameloop extends Phaser.Scene {
             boom = this.add.sprite(enemies.children.entries[posvar].x, enemies.children.entries[posvar].y, 'boom');
             boom.anims.play('explode');
 
+            if (enemyvar.texture.key == "safety") { 
+                score -= 10;
+            } else {
+                score++;
+            }
+            scoreText.setText('Score: ' + score);
+
             // remove dead ship
 
             this.shipCleaner(posvar);
 
             posvar = this.bullets.children.entries.indexOf(bulletvar);
             this.bullets.children.entries[posvar].destroy();
-            score++;
-    
-            scoreText.setText('Score: ' + score);
+
             buildEnemy = true;
 
         }
