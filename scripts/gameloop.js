@@ -39,6 +39,7 @@ class gameloop extends Phaser.Scene {
     }
 
     preload () {
+        console.log('preloader');
         this.load.image('ship', './assets/ship.png', { frameWidth: 32, frameHeight: 48 });
         this.load.image('bullet', './assets/bullet.png');
         this.load.image('boss1', './assets/boss1.png');
@@ -62,7 +63,8 @@ class gameloop extends Phaser.Scene {
     create () {
     
         // player setup
-        
+
+        console.log('creator');
         var music = this.sound.add('song');
         music.play();
         lastFired: 0;
@@ -171,8 +173,24 @@ class gameloop extends Phaser.Scene {
 
         // pause listeer
 
-        this.pausekey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
+        this.input.keyboard.on('keydown_P', function (event) {
+            if (gamepaused) {
+                this.scene.resume();
+                gamepaused = false;
+            } else {
+                this.scene.pause();
+                gamepaused = true;
+            }
+        }, this);
 
+        if (rerun) {
+            if (enemies.children.entries.length != 0) {
+                for (let index = 0; index < enemies.children.entries.length; index++) {
+                    this.shipCleaner(index);
+                }
+            }
+            this.player.enableBody(true, true);    
+        }
     }
 
     createEnemies () {
@@ -221,9 +239,11 @@ class gameloop extends Phaser.Scene {
     };
 
     update (time, delta) {
-    
+
         // player ship controls
-        
+
+        if (!this.player || !this.player.body) return
+
         if (this.cursors.right.isDown && this.cursors.down.isDown)
         {
             this.player.setVelocityX(160);
@@ -279,7 +299,6 @@ class gameloop extends Phaser.Scene {
         }
 
         if (this.cursors.space.isDown && time > this.lastFired)
-
         {
             this.bullet = this.bullets.get();
             this.bullet.setActive(true);
@@ -320,19 +339,20 @@ class gameloop extends Phaser.Scene {
 
         this.drawField();
 
-        if (this.pausekey.isDown) {
-            if (game.loop.running) {
-                game.loop.stop()
-            }
-        }
     }
     
-    shipCollide (crashvar) {
-        explosion = this.sound.add('explosion');
-        explosion.play();
-
-        this.enemies.children.entries[0].disableBody(true, true);
-        this.player.disableBody(true, true);
+    shipCollide (playvar, crashvar) {
+        if (!endgamevar) {
+            explosion = this.sound.add('explosion');
+            explosion.play();
+            posvar = enemies.children.entries.indexOf(crashvar);
+            boom = this.add.sprite(this.player.x, this.player.y, 'boom');
+            boom.anims.play('explode');
+            this.player.disableBody(true, true);
+            endgamevar = true;
+            this.shipCleaner(posvar);
+            game.scene.start('endpage');
+        }
     };
     
     destroyEnemy (bulletvar, enemyvar) {

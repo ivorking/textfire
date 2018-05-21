@@ -23,9 +23,7 @@ var config = {
             }
         }
     },
-
     scene: [ startpage, gameloop, endpage ],
-
 };
 
 var background;
@@ -38,17 +36,17 @@ var hardcounter = 0;
 var rotatevar = [];
 var boom;
 var tempvar = 0;
-var pausekey;
-
+var gamepaused = false;
+var endgamevar = false;
 var gameOver = false;
 var scoreText;
 var enemies = [];
 var enemiesToSpawn = 3;
 var buildEnemy = true;
-
 var music;
 var gunfire;
 var explosion;
+var rerun = false;
 
 // starvars
 
@@ -61,6 +59,9 @@ canvas.width = winW;
 canvas.height = winH;
 var ctx = canvas.getContext("2d");
 var stars = [];
+var updatefn = 0;
+
+// start game
 
 var game = new Phaser.Game(config);
 
