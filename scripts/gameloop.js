@@ -64,7 +64,7 @@ class gameloop extends Phaser.Scene {
         this.load.audio('song', './assets/sounds/music.mp3');
         this.load.audio('gunfire', './assets/sounds/gun.mp3');
         this.load.audio('explosion', './assets/sounds/explosion.mp3');
-    }
+    };
        
     create () {
     
@@ -201,64 +201,6 @@ class gameloop extends Phaser.Scene {
 
         this.physics.world.enable(this.bullets, this.player, enemies, this.wave);
  
-    }
-
-    createEnemies () {
-
-        if (enemies.length === 0) {
-            enemies = this.physics.add.group();
-        }
-
-        var config = {
-            key: 'standard'
-        }
-
-        let spawnVar = Phaser.Math.RND.integerInRange(1, 6);
-        let speedVar;
-        let currentEnemies = enemies.children.entries.length;
-        let index = 0;
-        
-        if (firstrun) {
-            enemies.create(winW + 100,Phaser.Math.RND.integerInRange(30, winH - 30),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
-            enemies.create(winW + 100,Phaser.Math.RND.integerInRange(30, winH - 30),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
-            enemies.setVelocity(-60, 0);
-        } else {
-            for (index = 0; index < spawnVar; index++) {
-                enemies.create(winW + 100,Phaser.Math.RND.integerInRange(30, winH - 30),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
-                speedVar = Phaser.Math.RND.integerInRange(40, 145);
-                enemies.children.entries[currentEnemies + index].setVelocity(-speedVar, 0);
-
-                tempvarx = Math.random() * 1.7 + 1
-                tempvary = Math.random() * 1.7 + 1
-                enemies.children.entries[currentEnemies + index].setScale(tempvarx, tempvary);
-
-                // add random spin to some ships
-
-                if ((currentEnemies + index) % 3 == 0) {
-                    enemies.children.entries[currentEnemies + index]._rotation = 8;
-                    rotatevar.push(currentEnemies + index);
-                }
-            }
-
-            // create hard to kill enemy (moves faster), & safety ship (lose points for hitting it)
-
-            tempvar = Phaser.Math.RND.integerInRange(1, 4)
-            if (tempvar == 1) {
-                enemies.create(winW + 100,Phaser.Math.RND.integerInRange(1, winH),'hardship').setActive();
-                currentEnemies = enemies.children.entries.length;
-                enemies.children.entries[currentEnemies - 1].setVelocity(-80, 0);
-            } else if (tempvar == 3) {
-                enemies.create(winW + 100,Phaser.Math.RND.integerInRange(1, winH),'safety').setActive();
-                currentEnemies = enemies.children.entries.length;
-                enemies.children.entries[currentEnemies - 1].setVelocity(-90, 0);
-            }
-        }
-
-        // add colliders
-
-        this.physics.add.collider(this.bullets, enemies, this.destroyEnemy, null, this);
-        this.physics.add.collider(this.player, enemies, this.shipCollide, null, this);
-
     };
 
     update (time, delta) {
@@ -377,9 +319,66 @@ class gameloop extends Phaser.Scene {
                 }
             }
         }
+    };
 
-    }
-    
+    createEnemies () {
+
+        if (enemies.length === 0) {
+            enemies = this.physics.add.group();
+        }
+
+        var config = {
+            key: 'standard'
+        }
+
+        let spawnVar = Phaser.Math.RND.integerInRange(1, 6);
+        let speedVar;
+        let currentEnemies = enemies.children.entries.length;
+        let index = 0;
+        
+        if (firstrun) {
+            enemies.create(winW + 100,Phaser.Math.RND.integerInRange(30, winH - 30),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
+            enemies.create(winW + 100,Phaser.Math.RND.integerInRange(30, winH - 30),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
+            enemies.setVelocity(-60, 0);
+        } else {
+            for (index = 0; index < spawnVar; index++) {
+                enemies.create(winW + 100,Phaser.Math.RND.integerInRange(30, winH - 30),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
+                speedVar = Phaser.Math.RND.integerInRange(40, 145);
+                enemies.children.entries[currentEnemies + index].setVelocity(-speedVar, 0);
+
+                tempvarx = Math.random() * 1.7 + 1
+                tempvary = Math.random() * 1.7 + 1
+                enemies.children.entries[currentEnemies + index].setScale(tempvarx, tempvary);
+
+                // add random spin to some ships
+
+                if ((currentEnemies + index) % 3 == 0) {
+                    enemies.children.entries[currentEnemies + index]._rotation = 8;
+                    rotatevar.push(currentEnemies + index);
+                }
+            }
+
+            // create hard to kill enemy (moves faster), & safety ship (lose points for hitting it)
+
+            tempvar = Phaser.Math.RND.integerInRange(1, 4)
+            if (tempvar == 1) {
+                enemies.create(winW + 100,Phaser.Math.RND.integerInRange(1, winH),'hardship').setActive();
+                currentEnemies = enemies.children.entries.length;
+                enemies.children.entries[currentEnemies - 1].setVelocity(-80, 0);
+            } else if (tempvar == 3) {
+                enemies.create(winW + 100,Phaser.Math.RND.integerInRange(1, winH),'safety').setActive();
+                currentEnemies = enemies.children.entries.length;
+                enemies.children.entries[currentEnemies - 1].setVelocity(-90, 0);
+            }
+        }
+
+        // add colliders
+
+        this.physics.add.collider(this.bullets, enemies, this.destroyEnemy, null, this);
+        this.physics.add.collider(this.player, enemies, this.shipCollide, null, this);
+
+    };
+
     shipCollide (playvar, crashvar) {
         if (!endgamevar) {
             console.log('here');
@@ -416,7 +415,7 @@ class gameloop extends Phaser.Scene {
 
             hardcounter ++;
 
-            if (hardcounter == 5) {
+            if (hardcounter == 6) {
                 score += 4;
                 hardcounter = 0;
             } else {
@@ -448,7 +447,29 @@ class gameloop extends Phaser.Scene {
 
         scoreText.setText('Score: ' + score);
 
-    }
+    };
+
+    waveCollide (playvar, crashvar) {
+        if (!endgamevar) {
+            explosion = this.sound.add('explosion');
+            explosion.play();
+            posvar = this.wave.children.entries.indexOf(crashvar);
+            boom = this.add.sprite(this.player.x, this.player.y, 'boom');
+            boom.anims.play('explode');
+            this.player.disableBody(true, true);
+            endgamevar = true;
+
+            // stop bullets
+
+            this.input.keyboard.removeKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+            for (let index = 0; index < this.bullets.children.entries.length; index++) {
+                this.bullets.children.entries[index].destroy();
+            }
+            this.bullets.enableBody = false;
+            
+            game.scene.start('endpage');
+        }
+    };
 
     waveHit (bulletvar, enemyvar) {
         let posvarwave = this.wave.children.entries.indexOf(enemyvar);
@@ -478,30 +499,8 @@ class gameloop extends Phaser.Scene {
             score += 2;
         }
         scoreText.setText('Score: ' + score);
-    }
-  
-    waveCollide (playvar, crashvar) {
-        if (!endgamevar) {
-            explosion = this.sound.add('explosion');
-            explosion.play();
-            posvar = this.wave.children.entries.indexOf(crashvar);
-            boom = this.add.sprite(this.player.x, this.player.y, 'boom');
-            boom.anims.play('explode');
-            this.player.disableBody(true, true);
-            endgamevar = true;
-
-            // stop bullets
-
-            this.input.keyboard.removeKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-            for (let index = 0; index < this.bullets.children.entries.length; index++) {
-                this.bullets.children.entries[index].destroy();
-            }
-            this.bullets.enableBody = false;
-            
-            game.scene.start('endpage');
-        }
     };
-
+  
     shipCleaner(shipid) {
 
         // remove dead ship from rotation array
@@ -527,7 +526,139 @@ class gameloop extends Phaser.Scene {
         enemies.children.entries[shipid].disableBody(true, true);
         enemies.children.entries[shipid].destroy();
 
-    }
+    };
+
+    waveBuilder () {
+
+        if (!endgamevar) {
+            this.wave = [];
+            this.wave.length = 0;
+
+            switch(timedEvent.repeatCount) {
+
+                case (wavenum): // wave 1
+                    this.wave = this.physics.add.group ({
+                        key: 'boss3',
+                        repeat: 5,
+                        setXY: {
+                            x: winW + 60,
+                            y: winH - 400,
+                            stepX: 30,
+                            stepY: 30
+                        }
+                    });
+                    speedNum = -4;
+                    break;
+
+                case (wavenum - 1): // wave 2
+                    this.wave = this.physics.add.group ({
+                        key: 'boss5',
+                        repeat: 8,
+                        setXY: {
+                            x: winW + 50,
+                            y: winH - 300,
+                            stepX: -20,
+                            stepY: 70
+                        }
+                    });
+                    speedNum = -5;
+                    break;
+
+                case (wavenum - 2): // wave 3
+                    this.wave = this.physics.add.group ({
+                        key: 'boss6',
+                        repeat: 12,
+                        setXY: {
+                            x: winW + 50,
+                            y: 20,
+                            stepX: 20,
+                            stepY: 40
+                        }
+                    });
+                    speedNum = 6;
+                    break;
+
+                case (wavenum - 3): // wave 4
+                    this.wave = this.physics.add.group ({
+                        key: 'boss2',
+                        repeat: 14,
+                        setXY: {
+                            x: winW + 50,
+                            y: 20,
+                            stepX: 5,
+                            stepY: 60
+                        }
+                    });
+                    speedNum = 3;
+                    break;
+
+                case (wavenum - 4): // wave 5
+                    this.wave = this.physics.add.group ({
+                        key: 'boss11',
+                        repeat: 16,
+                        setXY: {
+                            x: winW + 50,
+                            y: 100,
+                            stepX: 0,
+                            stepY: 100
+                        }
+                    });
+                    speedNum = -7;
+                    break;
+
+                case (wavenum - 5): // wave 6
+                    this.wave = this.physics.add.group ({
+                        key: 'boss12',
+                        repeat: 18,
+                        setXY: {
+                            x: winW + 80,
+                            y: 150,
+                            stepX: 30,
+                            stepY: 40
+                        }
+                    });
+                    speedNum = 8;
+                    break;
+
+                case (wavenum - 6): // wave 7
+                    this.wave = this.physics.add.group ({
+                        key: 'boss7',
+                        repeat: 20,
+                        setXY: {
+                            x: winW + 80,
+                            y: 0,
+                            stepX: 30,
+                            stepY: 30
+                        }
+                    });
+                    speedNum = 10;
+                    break;
+
+                case (wavenum - 7): // wave 8
+                    this.wave = this.physics.add.group ({
+                        key: 'boss9',
+                        repeat: 25,
+                        setXY: {
+                            x: winW + 80,
+                            y: 0,
+                            stepX: 0,
+                            stepY: 30
+                        }
+                    });
+                    speedNum = 5;
+                    break;
+
+                }
+
+            Phaser.Actions.Call(this.wave.getChildren(), function(wave) {
+                wave.speed = speedNum;
+            }, this);
+
+            this.physics.add.collider(this.bullets, this.wave, this.waveHit, null, this);
+            this.physics.add.collider(this.player, this.wave, this.waveCollide, null, this);
+            waveText.setText('Wave:' + (wavenum - timedEvent.repeatCount + 1));
+        }
+    };
 
     // STAR FUNCTIONS
 
@@ -536,145 +667,13 @@ class gameloop extends Phaser.Scene {
             stars.push(new Star());
         }
     }
-      
+        
     drawField () {
         ctx.clearRect(0, 0, winW, winH);
         ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
         for (let f=0;f<stars.length;f++) {
-           stars[f].UpdateField();
-           stars[f].Draw();
+            stars[f].UpdateField();
+            stars[f].Draw();
         }
     }
-
-    waveBuilder () {
-
-        this.wave = [];
-        this.wave.length = 0;
-
-        switch(timedEvent.repeatCount) {
-
-            case (wavenum): // wave 1
-                this.wave = this.physics.add.group ({
-                    key: 'boss3',
-                    repeat: 5,
-                    setXY: {
-                        x: winW + 60,
-                        y: winH - 400,
-                        stepX: 30,
-                        stepY: 30
-                    }
-                });
-                speedNum = -4;
-                break;
-
-            case (wavenum - 1): // wave 2
-                this.wave = this.physics.add.group ({
-                    key: 'boss5',
-                    repeat: 8,
-                    setXY: {
-                        x: winW + 50,
-                        y: winH - 300,
-                        stepX: -20,
-                        stepY: 70
-                    }
-                });
-                speedNum = -5;
-                break;
-
-            case (wavenum - 2): // wave 3
-                this.wave = this.physics.add.group ({
-                    key: 'boss6',
-                    repeat: 12,
-                    setXY: {
-                        x: winW + 50,
-                        y: 20,
-                        stepX: 20,
-                        stepY: 40
-                    }
-                });
-                speedNum = 6;
-                break;
-
-            case (wavenum - 3): // wave 4
-                this.wave = this.physics.add.group ({
-                    key: 'boss2',
-                    repeat: 14,
-                    setXY: {
-                        x: winW + 50,
-                        y: 20,
-                        stepX: 5,
-                        stepY: 60
-                    }
-                });
-                speedNum = 3;
-                break;
-
-            case (wavenum - 4): // wave 5
-                this.wave = this.physics.add.group ({
-                    key: 'boss11',
-                    repeat: 16,
-                    setXY: {
-                        x: winW + 50,
-                        y: 100,
-                        stepX: 0,
-                        stepY: 100
-                    }
-                });
-                speedNum = -7;
-                break;
-
-            case (wavenum - 5): // wave 6
-                this.wave = this.physics.add.group ({
-                    key: 'boss12',
-                    repeat: 18,
-                    setXY: {
-                        x: winW + 80,
-                        y: 150,
-                        stepX: 30,
-                        stepY: 40
-                    }
-                });
-                speedNum = 8;
-                break;
-
-            case (wavenum - 6): // wave 7
-                this.wave = this.physics.add.group ({
-                    key: 'boss7',
-                    repeat: 20,
-                    setXY: {
-                        x: winW + 80,
-                        y: 0,
-                        stepX: 30,
-                        stepY: 30
-                    }
-                });
-                speedNum = 10;
-                break;
-
-            case (wavenum - 7): // wave 8
-                this.wave = this.physics.add.group ({
-                    key: 'boss9',
-                    repeat: 25,
-                    setXY: {
-                        x: winW + 80,
-                        y: 0,
-                        stepX: 0,
-                        stepY: 30
-                    }
-                });
-                speedNum = 5;
-                break;
-
-            }
-
-        Phaser.Actions.Call(this.wave.getChildren(), function(wave) {
-            wave.speed = speedNum;
-        }, this);
-
-        this.physics.add.collider(this.bullets, this.wave, this.waveHit, null, this);
-        this.physics.add.collider(this.player, this.wave, this.waveCollide, null, this);
-        waveText.setText('Wave:' + (wavenum - timedEvent.repeatCount + 1));
-        
-    }
-
 };
