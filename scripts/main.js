@@ -47,6 +47,10 @@ var music;
 var gunfire;
 var explosion;
 var rerun = false;
+var wavecounter = 1;
+var tempvarx;
+var tempvary;
+var timerEvent;
 
 // starvars
 

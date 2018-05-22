@@ -198,6 +198,8 @@ class gameloop extends Phaser.Scene {
             }
             this.player.enableBody(true, true);    
         }
+
+        timerEvent = this.time.addEvent({ delay: 4000, repeat: 20 });
     }
 
     createEnemies () {
@@ -222,8 +224,13 @@ class gameloop extends Phaser.Scene {
         } else {
             for (index = 0; index < spawnVar; index++) {
                 enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
-                speedVar = Phaser.Math.RND.integerInRange(30, 115);
+                speedVar = Phaser.Math.RND.integerInRange(30, 125);
                 enemies.children.entries[currentEnemies + index].setVelocity(-speedVar, 0);
+
+                tempvarx = Math.random() * 1.7 + 1
+                tempvary = Math.random() * 1.7 + 1
+                enemies.children.entries[currentEnemies + index].setScale(tempvarx, tempvary);
+
                 if ((currentEnemies + index) % 3 == 0) {
                     enemies.children.entries[currentEnemies + index]._rotation = 8;
                     rotatevar.push(currentEnemies + index);
@@ -234,14 +241,16 @@ class gameloop extends Phaser.Scene {
 
         // create hard to kill enemy, moves faster
 
-        enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'hardship').setActive();
-        currentEnemies = enemies.children.entries.length;
-        enemies.children.entries[currentEnemies - 1].setVelocity(-80, 0);
-
-        enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'safety').setActive();
-        currentEnemies = enemies.children.entries.length;
-        enemies.children.entries[currentEnemies - 1].setVelocity(-40, 0);
-        // enemies.children.entries[currentEnemies - 1].setScale(2, 2);
+        tempvar = Phaser.Math.RND.integerInRange(1, 4)
+        if (tempvar == 1) {
+            enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'hardship').setActive();
+            currentEnemies = enemies.children.entries.length;
+            enemies.children.entries[currentEnemies - 1].setVelocity(-80, 0);
+        } else if (tempvar == 3 || tempvar == 4 ) {
+            enemies.create(winW-50,Phaser.Math.RND.integerInRange(1, winH),'safety').setActive();
+            currentEnemies = enemies.children.entries.length;
+            enemies.children.entries[currentEnemies - 1].setVelocity(-40, 0);
+        }
 
         // include colliders
 
@@ -253,6 +262,8 @@ class gameloop extends Phaser.Scene {
     update (time, delta) {
 
         // player ship controls
+
+        // console.log(timerEvent);
 
         if (!this.player || !this.player.body) return
 
