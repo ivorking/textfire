@@ -50,7 +50,7 @@ var explosion;
 var firstrun = true;
 var wavecounter = 0;
 var timedEvent;
-var wavenum = 20;
+var wavenum = 8;
 var speedNum;
 var music;
 
