@@ -70,7 +70,7 @@ class gameloop extends Phaser.Scene {
     
         // player setup
 
-        var music = this.sound.add('song');
+        music = this.sound.add('song');
         music.play();
         lastFired: 0;
     
@@ -106,10 +106,15 @@ class gameloop extends Phaser.Scene {
             {
                 this.x += this.speed * delta;
                 this.born += delta;
+
+                // comment this section out for full-length bullets
+
                 if (this.born > 1000)
                 {
                     this.setActive(false);
                     this.setVisible(false);
+                    this.enableBody = false;
+                    this.destroy();
                 }
             }
         });
@@ -403,6 +408,7 @@ class gameloop extends Phaser.Scene {
 
         // destroy bullets
 
+        this.bullets.enableBody = false;
         posvar = this.bullets.children.entries.indexOf(bulletvar);
         this.bullets.children.entries[posvar].destroy();
 
@@ -456,6 +462,7 @@ class gameloop extends Phaser.Scene {
 
         // remove dead bullets
         
+        this.bullets.enableBody = false;
         posvar = this.bullets.children.entries.indexOf(bulletvar);
         this.bullets.children.entries[posvar].destroy();
 
@@ -471,7 +478,6 @@ class gameloop extends Phaser.Scene {
             score += 2;
         }
         scoreText.setText('Score: ' + score);
-        debugger;
     }
   
     waveCollide (playvar, crashvar) {

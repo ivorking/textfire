@@ -52,6 +52,7 @@ var wavecounter = 0;
 var timedEvent;
 var wavenum = 20;
 var speedNum;
+var music;
 
 // starvars
 
