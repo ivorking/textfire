@@ -223,3 +223,13 @@ WORKING
             explosionanime.anchor.setTo(0.5, 0.5);
             explosionanime.animations.add('boom');
             explosionanime.play('boom', 15, false, true);
+
+
+        // if (rerun) {
+        //     if (enemies.children.entries.length != 0) {
+        //         for (let index = 0; index < enemies.children.entries.length; index++) {
+        //             this.shipCleaner(index);
+        //         }
+        //     }
+        //     this.player.enableBody(true, true);    
+        // }

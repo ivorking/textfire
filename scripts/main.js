@@ -4,6 +4,7 @@ var winW = window.innerWidth;
 var winH = window.innerHeight;
 
 var config = {
+    // change to type: Phaser.CANVAS, for cross-platform optimisation
     type: Phaser.AUTO,
     width: winW,
     height: winH,
@@ -42,15 +43,14 @@ var gameOver = false;
 var scoreText;
 var enemies = [];
 var enemiesToSpawn = 3;
-var buildEnemy = true;
 var music;
 var gunfire;
 var explosion;
-var rerun = false;
-var wavecounter = 1;
+var firstrun = true;
+var wavecounter = 0;
 var tempvarx;
 var tempvary;
-var timerEvent;
+var timedEvent;
 
 // starvars
 

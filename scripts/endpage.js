@@ -13,7 +13,6 @@ class endpage extends Phaser.Scene {
     update(time, delta) {
         if (this.key_1.isDown) {
             this.resetvars();
-            rerun = true;
             window.location.reload();
             this.scene.start('gameloop');
         }
@@ -35,7 +34,6 @@ class endpage extends Phaser.Scene {
         enemies = [];
         enemies.length = 0;
         enemiesToSpawn = 3;
-        buildEnemy = true;
         totalObjects = 600;
         maxVelocity = 2;
         starSize = 1.5;
@@ -47,5 +45,6 @@ class endpage extends Phaser.Scene {
         stars = [];
         stars.length = 0;
         updatefn = 0;
+        firstrun = true;
     }
 }
