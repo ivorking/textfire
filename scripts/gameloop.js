@@ -454,9 +454,6 @@ class gameloop extends Phaser.Scene {
         boom = this.add.sprite(this.wave.children.entries[posvarwave].x, this.wave.children.entries[posvarwave].y, 'boom');
         boom.anims.play('explode');
 
-        score += 3;
-        scoreText.setText('Score: ' + score);
-
         // remove dead bullets
         
         posvar = this.bullets.children.entries.indexOf(bulletvar);
@@ -466,6 +463,15 @@ class gameloop extends Phaser.Scene {
 
         this.wave.children.entries[posvarwave].destroy();
 
+        // scoring, and bonus for destroying wave
+
+        if (this.wave.children.entries.length == 0) {
+            score += 20;
+        } else {
+            score += 2;
+        }
+        scoreText.setText('Score: ' + score);
+        debugger;
     }
   
     waveCollide (playvar, crashvar) {
@@ -638,7 +644,22 @@ class gameloop extends Phaser.Scene {
                 });
                 speedNum = 10;
                 break;
-        }
+
+            case (wavenum - 7): // wave 8
+                this.wave = this.physics.add.group ({
+                    key: 'boss9',
+                    repeat: 25,
+                    setXY: {
+                        x: winW + 80,
+                        y: 0,
+                        stepX: 0,
+                        stepY: 30
+                    }
+                });
+                speedNum = 5;
+                break;
+
+            }
 
         Phaser.Actions.Call(this.wave.getChildren(), function(wave) {
             wave.speed = speedNum;
