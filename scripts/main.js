@@ -1,4 +1,4 @@
-// phaser 3 scene navigation & app start page
+// phaser 3 main scene navigation & app start page
 
 var winW = window.innerWidth;
 var winH = window.innerHeight;
@@ -36,21 +36,23 @@ var hardcounter = 0;
 var rotatevar = [];
 var boom;
 var tempvar = 0;
+var tempvarx;
+var tempvary;
 var gamepaused = false;
 var endgamevar = false;
-var gameOver = false;
 var scoreText;
+var waveText;
 var enemies = [];
 var enemiesToSpawn = 3;
-var buildEnemy = true;
 var music;
 var gunfire;
 var explosion;
-var rerun = false;
-var wavecounter = 1;
-var tempvarx;
-var tempvary;
-var timerEvent;
+var firstrun = true;
+var wavecounter = 0;
+var timedEvent;
+var wavenum = 20;
+var speedNum;
+var music;
 
 // starvars
 
@@ -63,7 +65,6 @@ canvas.width = winW;
 canvas.height = winH;
 var ctx = canvas.getContext("2d");
 var stars = [];
-var updatefn = 0;
 
 // start game
 
