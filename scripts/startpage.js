@@ -23,6 +23,7 @@ class startpage extends Phaser.Scene {
 
     update(time, delta) {
         if (this.key_1.isDown) {
+            playerName = prompt("Enter your ship's name", "name");
             music.stop();
             this.scene.start("gameloop");
         }

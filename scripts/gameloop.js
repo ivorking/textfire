@@ -64,8 +64,9 @@ class gameloop extends Phaser.Scene {
         this.load.audio('song', './assets/sounds/music.mp3');
         this.load.audio('gunfire', './assets/sounds/gun.mp3');
         this.load.audio('explosion', './assets/sounds/explosion.mp3');
+        debugger;
     };
-       
+
     create () {
     
         // player setup
@@ -213,32 +214,38 @@ class gameloop extends Phaser.Scene {
         {
             this.player.setVelocityX(160);
             this.player.setVelocityY(160);
+            this.player.flipX = false;
         }
         else if (this.cursors.right.isDown && this.cursors.up.isDown)
         {
             this.player.setVelocityX(160);
             this.player.setVelocityY(-160);
+            this.player.flipX = false;
         }
         else if (this.cursors.left.isDown && this.cursors.down.isDown)
         {
             this.player.setVelocityX(-160);
             this.player.setVelocityY(160);
+            this.player.flipX = true;
         }
         else if (this.cursors.left.isDown && this.cursors.up.isDown)
         {
             this.player.setVelocityX(-160);
             this.player.setVelocityY(-160);
+            this.player.flipX = true;
         }
         else if (this.cursors.left.isDown)
         {
             this.player.setVelocityX(-160);
             this.player.setVelocityY(0);
+            this.player.flipX = true;
             // this.player.anims.play('left', true);
         }
         else if (this.cursors.right.isDown)
         {
             this.player.setVelocityX(160);
             this.player.setVelocityY(0);
+            this.player.flipX = false;
             // this.player.anims.play('right', true);
         }
         else if (this.cursors.up.isDown)
@@ -361,7 +368,7 @@ class gameloop extends Phaser.Scene {
             // create hard to kill enemy (moves faster), & safety ship (lose points for hitting it)
 
             tempvar = Phaser.Math.RND.integerInRange(1, 4)
-            if (tempvar == 1) {
+            if (tempvar == 1 || tempvar == 2) {
                 enemies.create(winW + 100,Phaser.Math.RND.integerInRange(1, winH),'hardship').setActive();
                 currentEnemies = enemies.children.entries.length;
                 enemies.children.entries[currentEnemies - 1].setVelocity(-80, 0);
