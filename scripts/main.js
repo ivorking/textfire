@@ -69,5 +69,3 @@ var stars = [];
 // start game
 
 var game = new Phaser.Game(config);
-
-

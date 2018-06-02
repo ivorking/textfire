@@ -2,7 +2,7 @@
 
 class Star {
 
-    constructor (X,Y,Velocity,Opacity) 
+    constructor (X,Y,Velocity,Opacity)
     {
         this.X = Math.random()*winW;
         this.Y = Math.random()*winH;
@@ -39,7 +39,12 @@ class gameloop extends Phaser.Scene {
     }
 
     preload () {
-        this.load.image('ship', './assets/ship.png', { frameWidth: 32, frameHeight: 48 });
+      // const dataURI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAyCAYAAACqNX6+AAADs0lEQVR4nO3YWWhdVRTG8V9xiIJWiUTjhEOlgdaCCiLiiARpa0VwqOhDEQkqau2DFq0+qPRBqmLrRPWtvqjgg1pFRR9sxTm1CVVxrqkDilOrVYRojA97X3I89zS5yU2TGNYfLpy9zjrfXnuvvdfZ5xIEQRAEQRAEQRAEQRAEQRAEQRAEQRBMMY7FHTh4ArXPxC84fjf0WcVhGMDaCeqPJsbYicGxPNiE9knowazd0GcVt+AvbEfLBPU55jFORkImml7clGNZPMmxDMsK/CgF+j2+wVuF+4uwCZ+hD4/igML9WXhWGnAP3sCyEbSvwLfZ3pV9r8/tQVyFu7EjP7OiIu7rsA1/4B2cnZ/djvUl31PwOPaRSsgLw8xHI7pn4Jk83h50q09yU2Pc1Sq+AP9gSW7PxNvYgBnZ1ouVhWcuws4GtPcrBbs/5mRbN27APKzKtlMLz16WbcukSZ6NN7PtGvWsleo5rMbfOLTCr1HdNbjH0Bx0SAuvc7zGuKtJ+wTvlWzzs29nDnoQV5Z8bi9cN5qQou3Jgm1P/IlbS3F1l/TOU52QFrxeaHdkv+XqaVS3HfuW/J4oxU0TY6yatCOy7cFSJ4dk+125/a60ve/FieoZS0JuLPl+ifvzdWv2eaDk0646IYullVjkVXxQso1GtxX34X18JZXy36W5KDLWMVZO2gmGamdf6bdDepfAgVJyvsv+H0tlazjtkYLtKvl+jofy9dzsc2fJp7Zbywl5Hl+X4q+9104u+I1GdwO+kHZbjXVS+S4y1jEOu0NWaYw9sFAqcQMFrfFOSG0ll3du1Upux3MVsc5Ef0FzNLqH5/ZtJb91xjEhZ2Wnebl9OtrwEV6qGNBKnCPtjjWle7Oz1qUjaI85WKnWbyr5LFCfkOW4uiJ+eAU/Y+9R6h6tOiEvG8eEHJOdFkgvwR+k7bhQ+pgqlqBLpBLQKq2efpxWuN8lvVOOGkG7mYTUTkNLsVfuY736hGyRvtCrWJr9Lx6l7oysuxVHZtt8qSqMW0JIpakPH/rvMfZc6dthKzbjaUO1s0U6UW2WzuNbsFHaFcNpL5HO+oP4STpxnF+yrZYS3ictit+k2l3j2uy/E69JB4pBaUe05XsD+fk5pXhulr6LBvErHmtQt8ZxeFF6v/biEem7pD/319bEGKcNtdp+4f9Ed1qxCJeXbLVa31HvPum6054uqfwdlNut0t8cT01R3WnPXGmSPpU+8LbhYemviamoGwRBEARBEARBEARBEARBEATB5PEvoVFvoyiNkQYAAAAASUVORK5CYII='
+      // var data = new Image();
+      // data.src = dataURI;
+      // this.cache.addImage('ship', dataURI, data);
+
+        this.load.image('ship', 'http://csimg.webmarchand.com/srv/FR/290518912300/T/340x340/C/FFFFFF/url/cache-sous-moteur-citroen-c4.jpg', { frameWidth: 32, frameHeight: 48 });
         this.load.image('bullet', './assets/bullet.png');
         this.load.image('boss1', './assets/boss1.png');
         this.load.image('boss2', './assets/boss2.png');
@@ -65,43 +70,43 @@ class gameloop extends Phaser.Scene {
         this.load.audio('gunfire', './assets/sounds/gun.mp3');
         this.load.audio('explosion', './assets/sounds/explosion.mp3');
     };
-       
+
     create () {
-    
+
         // player setup
 
         music = this.sound.add('song');
         music.play();
         lastFired: 0;
-    
+
         this.player = this.physics.add.sprite(250, 250, 'ship').setDepth(1);
         this.player.setScale(1.2);
         this.cursors = this.input.keyboard.createCursorKeys();
         this.player.setCollideWorldBounds(true);
-        
+
         // bullet setup
 
         this.lastFired = 0;
 
         var Bullet = new Phaser.Class({
-    
+
             Extends: Phaser.GameObjects.Image,
-    
+
             initialize:
-    
+
             function Bullet (scene)
             {
                 Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
                 this.speed = 0.5;
                 this.born = 0;
             },
-    
+
             fire: function (player)
             {
                 this.setPosition(player.x + 70, player.y);
                 this.born = 0;
             },
-    
+
             update: function (time, delta)
             {
                 this.x += this.speed * delta;
@@ -118,7 +123,7 @@ class gameloop extends Phaser.Scene {
                 }
             }
         });
-    
+
         this.cameras.main.setBounds(0, 0, winW, winH);
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -128,10 +133,10 @@ class gameloop extends Phaser.Scene {
                 runChildUpdate: true
             });
         }
-    
+
         // plain starfield - faster, less resource intensive, less impressive
         // background = this.add.tileSprite(0, 0, winW * 3, winH * 2, 'starfield');
-      
+
         this.bullets.enableBody = true;
 
         // player animations (direction images to be enabled)
@@ -142,21 +147,21 @@ class gameloop extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         });
-    
+
         this.anims.create({
             key: 'right',
             frames: [ { key: 'ship', frame: 0 } ],
             frameRate: 10,
             repeat: -1
         });
-    
+
         this.anims.create({
             key: 'up',
             frames: [ { key: 'ship', frame: 0 } ],
             frameRate: 1,
             repeat: 1
         });
-    
+
         this.anims.create({
             key: 'down',
             frames: [ { key: 'ship', frame: 0 } ],
@@ -170,7 +175,7 @@ class gameloop extends Phaser.Scene {
 
         scoreText = this.add.text(5, 5, 'Score:' + score, { fontSize: '17px', fill: '#FFFFFF' });
         waveText = this.add.text(5, 25, 'Wave:' + (wavenum - timedEvent.repeatCount), { fontSize: '17px', fill: '#FFFFFF' });
-      
+
         // explosion animation
 
         this.anims.create({
@@ -200,7 +205,7 @@ class gameloop extends Phaser.Scene {
         }, this);
 
         this.physics.world.enable(this.bullets, this.player, enemies, this.wave);
- 
+
     };
 
     update (time, delta) {
@@ -252,14 +257,14 @@ class gameloop extends Phaser.Scene {
             this.player.setVelocityY(160);
             this.player.setVelocityX(0);
             // this.player.anims.play('down', true);
-        } 
+        }
         else
         {
             this.player.setVelocityX(0);
             this.player.setVelocityY(0);
         }
 
-        if ((this.cursors.space.isDown && time > this.lastFired) && (!endgamevar)) 
+        if ((this.cursors.space.isDown && time > this.lastFired) && (!endgamevar))
         {
             this.bullet = this.bullets.get();
             this.bullet.setActive(true);
@@ -273,7 +278,7 @@ class gameloop extends Phaser.Scene {
                 this.lastFired = time + 100;
             }
         }
-    
+
         // plain starfield:
         // background.tilePositionX += 0.5;
 
@@ -282,14 +287,14 @@ class gameloop extends Phaser.Scene {
         for (let index = 0; index < enemies.children.entries.length; index++) {
             if (enemies.children.entries[index].x < -100) {
                 this.shipCleaner(index);
-            } 
+            }
         }
 
         // update rotations for remaining ships on screen
 
         for (let index = 0; index < rotatevar.length; index++) {
             tempvar = rotatevar[index];
-            enemies.children.entries[tempvar]._rotation += 0.05;            
+            enemies.children.entries[tempvar]._rotation += 0.05;
         }
 
         if (enemies.children.entries.length <= 1) {
@@ -306,13 +311,13 @@ class gameloop extends Phaser.Scene {
         if (this.wave) {
             let waveships = this.wave.getChildren();
             let numships = waveships.length;
-            
+
             for (let i = 0; i < numships; i++) {
 
                 // move waveships
                 waveships[i].y += waveships[i].speed;
                 waveships[i].x -= Math.abs(waveships[i].speed);
-                
+
                 // reverse movement if reach the edge of the screen
                 if (waveships[i].y >= winH || waveships[i].y <= 0) {
                     waveships[i].speed = waveships[i].speed * -1;
@@ -335,7 +340,7 @@ class gameloop extends Phaser.Scene {
         let speedVar;
         let currentEnemies = enemies.children.entries.length;
         let index = 0;
-        
+
         if (firstrun) {
             enemies.create(winW + 100,Phaser.Math.RND.integerInRange(30, winH - 30),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
             enemies.create(winW + 100,Phaser.Math.RND.integerInRange(30, winH - 30),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
@@ -402,7 +407,7 @@ class gameloop extends Phaser.Scene {
             game.scene.start('endpage');
         }
     };
-    
+
     destroyEnemy (bulletvar, enemyvar) {
 
         // destroy bullets
@@ -424,7 +429,7 @@ class gameloop extends Phaser.Scene {
 
         } else {
 
-            if (enemyvar.texture.key == "safety") { 
+            if (enemyvar.texture.key == "safety") {
                 score -= 10;
             } else {
                 score++;
@@ -466,7 +471,7 @@ class gameloop extends Phaser.Scene {
                 this.bullets.children.entries[index].destroy();
             }
             this.bullets.enableBody = false;
-            
+
             game.scene.start('endpage');
         }
     };
@@ -474,7 +479,7 @@ class gameloop extends Phaser.Scene {
     waveHit (bulletvar, enemyvar) {
         let posvarwave = this.wave.children.entries.indexOf(enemyvar);
 
-        // explosion 
+        // explosion
 
         explosion = this.sound.add('explosion');
         explosion.play();
@@ -482,7 +487,7 @@ class gameloop extends Phaser.Scene {
         boom.anims.play('explode');
 
         // remove dead bullets
-        
+
         this.bullets.enableBody = false;
         posvar = this.bullets.children.entries.indexOf(bulletvar);
         this.bullets.children.entries[posvar].destroy();
@@ -500,7 +505,7 @@ class gameloop extends Phaser.Scene {
         }
         scoreText.setText('Score: ' + score);
     };
-  
+
     shipCleaner(shipid) {
 
         // remove dead ship from rotation array
@@ -667,7 +672,7 @@ class gameloop extends Phaser.Scene {
             stars.push(new Star());
         }
     }
-        
+
     drawField () {
         ctx.clearRect(0, 0, winW, winH);
         ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
