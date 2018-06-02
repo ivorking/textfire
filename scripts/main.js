@@ -53,7 +53,12 @@ var timedEvent;
 var wavenum = 8;
 var speedNum;
 var music;
+
+// testing
+
 var playerName;
+var datax;
+var testvarx;
 
 // starvars
 
