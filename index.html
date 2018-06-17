@@ -6,47 +6,23 @@
     <title>textFIRE</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/stylesheets/main.css" />
+    <link rel="stylesheet" href="./assets/stylesheets/jquery-confirm.css" />
     <script src="./scripts/jquery.js"></script>
     <script src="./scripts/underscore.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
 </head>
+
 <body class = "home">
-    <canvas id="field">
-    </canvas>
-    <script src="./dist/phaser.js"></script>
-    <script src="./scripts/startpage.js"></script>
-    <script src="./scripts/gameloop.js"></script>
-    <script src="./scripts/endpage.js"></script>
-    <script src="./scripts/main.js"></script>
-    <script src="./node_modules/dom-to-image/src/dom-to-image.js"></script>
-    <script src="./node_modules/file-saver/FileSaver.js"></script>
+  
+  <canvas id="field"></canvas>
+  <div id="shipnamedraw" style="display:inline-block;"></div>
 
-    <p id="test1" style="display:block;">testing</p>
-      <p id="my-node">testingAgain</p>
-    <script type="text/javascript">
-      const node = document.getElementById('test1');
-      domtoimage.toPng(node, { quality: 0.95, height: 50, width: 100 })
-      .then(function (dataUrl) {
-        var img = new Image();
-        img.src = dataUrl;
-        document.body.appendChild(img);
-      }).catch(function (error) {
-        console.error('oops, something went wrong!', error);
-      });
+  <script src="./node_modules/dom-to-image/src/dom-to-image.js"></script>
+  <script src="./dist/phaser.js"></script>
+  <script src="./scripts/startpage.js"></script>
+  <script src="./scripts/gameloop.js"></script>
+  <script src="./scripts/endpage.js"></script>
+  <script src="./scripts/main.js"></script>
 
-    //   domtoimage.toBlob(document.getElementById('my-node'), { quality: 0.95, height: 50, width: 100 })
-    // .then(function (blob) {
-    //     window.saveAs(blob, 'my-node.png');
-    // });
-
-      domtoimage.toPng(document.getElementById('my-node'), { quality: 0.95, height: 50, width: 100 })
-    .then(function (dataUrl) {
-        var link = document.createElement('a');
-        link.download = 'my-image-name.jpeg';
-        link.href = dataUrl;
-        // document.location.href = dataUrl;
-        link.click();
-        console.log(link);
-    });
-    </script>
 </body>
 </html>

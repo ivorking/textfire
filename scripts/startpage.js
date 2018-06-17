@@ -11,6 +11,7 @@ class startpage extends Phaser.Scene {
     }
 
     create() {
+
         music = this.sound.add('megablast');
         music.play();
         this.text = this.add.text(winW/2 - 50, winH/2 - 60, "textFIRE", {font: "24px Arial", fill: "#000000"});
@@ -21,11 +22,72 @@ class startpage extends Phaser.Scene {
         this.key_1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     }
 
+    getShipName() {
+
+        $.confirm({
+          theme: 'supervan',
+          columnClass: 'col-md-12',
+          title: 'Before you begin...',
+          content: '' +
+          '<form action="" class="formName">' +
+          '<div class="form-group">' +
+          '<label>Enter your ship name here</label>' +
+          '<br />' +
+          '<input type="text" placeholder="Ship name" class="name form-control" required />' +
+          '</div>' +
+          '</form>',
+          buttons: {
+            formSubmit: {
+                text: 'Enter name',
+                btnClass: 'btn-orange',
+                action: function () {
+                    playerName = this.$content.find('.name').val();
+                    document.getElementById('shipnamedraw').innerHTML = playerName;
+
+                    const nodex = document.getElementById('shipnamedraw');
+                    var tempcalc = document.getElementById('shipnamedraw');
+                    var stylex = window.getComputedStyle(tempcalc);
+
+                    heightS = +((stylex.height).slice(0, -2));
+                    widthS = +((stylex.width).slice(0, -2));
+                    domtoimage.toPng(nodex, { quality: 0.95, height: 50, width: widthS }).then(function (dataUrl) {
+                        var img = new Image();
+                        img.src = dataUrl;
+                        datax = dataUrl;
+                        startReady = true;
+                    });
+
+                    music.stop();
+                }
+            },
+          },
+
+          onContentReady: function () {
+          // bind to events
+            var jc = this;
+            this.$content.find('form').on('submit', function (e) {
+              // if the user submits the form by pressing enter in the field.
+              e.preventDefault();
+              jc.$$formSubmit.trigger('click'); // reference the button and click it
+            })
+          }
+        })
+    };
+
     update(time, delta) {
         if (this.key_1.isDown) {
-            playerName = prompt("Enter your ship's name", "name");
-            music.stop();
+            if (playerName) {
+                this.scene.start("gameloop");
+            } else {
+                this.key_1.enabled = false;
+                this.getShipName();
+                this.key_1.enabled = true;
+            }
+            this.key_1.isDown = false;
+        }
+        if (playerName && startReady) {
             this.scene.start("gameloop");
         }
     }
+
 }

@@ -32,6 +32,7 @@ class Star {
 
 };
 
+
 class gameloop extends Phaser.Scene {
 
     constructor() {
@@ -39,16 +40,12 @@ class gameloop extends Phaser.Scene {
     }
 
     preload () {
-      const dataURI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAyCAYAAACqNX6+AAADs0lEQVR4nO3YWWhdVRTG8V9xiIJWiUTjhEOlgdaCCiLiiARpa0VwqOhDEQkqau2DFq0+qPRBqmLrRPWtvqjgg1pFRR9sxTm1CVVxrqkDilOrVYRojA97X3I89zS5yU2TGNYfLpy9zjrfXnuvvdfZ5xIEQRAEQRAEQRAEQRAEQRAEQRAEQRBMMY7FHTh4ArXPxC84fjf0WcVhGMDaCeqPJsbYicGxPNiE9knowazd0GcVt+AvbEfLBPU55jFORkImml7clGNZPMmxDMsK/CgF+j2+wVuF+4uwCZ+hD4/igML9WXhWGnAP3sCyEbSvwLfZ3pV9r8/tQVyFu7EjP7OiIu7rsA1/4B2cnZ/djvUl31PwOPaRSsgLw8xHI7pn4Jk83h50q09yU2Pc1Sq+AP9gSW7PxNvYgBnZ1ouVhWcuws4GtPcrBbs/5mRbN27APKzKtlMLz16WbcukSZ6NN7PtGvWsleo5rMbfOLTCr1HdNbjH0Bx0SAuvc7zGuKtJ+wTvlWzzs29nDnoQV5Z8bi9cN5qQou3Jgm1P/IlbS3F1l/TOU52QFrxeaHdkv+XqaVS3HfuW/J4oxU0TY6yatCOy7cFSJ4dk+125/a60ve/FieoZS0JuLPl+ifvzdWv2eaDk0646IYullVjkVXxQso1GtxX34X18JZXy36W5KDLWMVZO2gmGamdf6bdDepfAgVJyvsv+H0tlazjtkYLtKvl+jofy9dzsc2fJp7Zbywl5Hl+X4q+9104u+I1GdwO+kHZbjXVS+S4y1jEOu0NWaYw9sFAqcQMFrfFOSG0ll3du1Upux3MVsc5Ef0FzNLqH5/ZtJb91xjEhZ2Wnebl9OtrwEV6qGNBKnCPtjjWle7Oz1qUjaI85WKnWbyr5LFCfkOW4uiJ+eAU/Y+9R6h6tOiEvG8eEHJOdFkgvwR+k7bhQ+pgqlqBLpBLQKq2efpxWuN8lvVOOGkG7mYTUTkNLsVfuY736hGyRvtCrWJr9Lx6l7oysuxVHZtt8qSqMW0JIpakPH/rvMfZc6dthKzbjaUO1s0U6UW2WzuNbsFHaFcNpL5HO+oP4STpxnF+yrZYS3ictit+k2l3j2uy/E69JB4pBaUe05XsD+fk5pXhulr6LBvErHmtQt8ZxeFF6v/biEem7pD/319bEGKcNtdp+4f9Ed1qxCJeXbLVa31HvPum6054uqfwdlNut0t8cT01R3WnPXGmSPpU+8LbhYemviamoGwRBEARBEARBEARBEARBEATB5PEvoVFvoyiNkQYAAAAASUVORK5CYII='
-    //   datax = new Image();
-    //   datax.src = dataURI;
-    //   this.cache.addImage('ship', dataURI, datax);
-    //   testvarx = new Phaser.Cache.BaseCache;
-    // testvarx.add('ship', dataURI, { frameWidth: 32, frameHeight: 48 });
-this.textures.addBase64('ship', dataURI);
-        // this.load.image('ship', 'http://csimg.webmarchand.com/srv/FR/290518912300/T/340x340/C/FFFFFF/url/cache-sous-moteur-citroen-c4.jpg', { frameWidth: 32, frameHeight: 48 });
 
-        // this.load.image('ship', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAyCAYAAACqNX6+AAADs0lEQVR4nO3YWWhdVRTG8V9xiIJWiUTjhEOlgdaCCiLiiARpa0VwqOhDEQkqau2DFq0+qPRBqmLrRPWtvqjgg1pFRR9sxTm1CVVxrqkDilOrVYRojA97X3I89zS5yU2TGNYfLpy9zjrfXnuvvdfZ5xIEQRAEQRAEQRAEQRAEQRAEQRAEQRBMMY7FHTh4ArXPxC84fjf0WcVhGMDaCeqPJsbYicGxPNiE9knowazd0GcVt+AvbEfLBPU55jFORkImml7clGNZPMmxDMsK/CgF+j2+wVuF+4uwCZ+hD4/igML9WXhWGnAP3sCyEbSvwLfZ3pV9r8/tQVyFu7EjP7OiIu7rsA1/4B2cnZ/djvUl31PwOPaRSsgLw8xHI7pn4Jk83h50q09yU2Pc1Sq+AP9gSW7PxNvYgBnZ1ouVhWcuws4GtPcrBbs/5mRbN27APKzKtlMLz16WbcukSZ6NN7PtGvWsleo5rMbfOLTCr1HdNbjH0Bx0SAuvc7zGuKtJ+wTvlWzzs29nDnoQV5Z8bi9cN5qQou3Jgm1P/IlbS3F1l/TOU52QFrxeaHdkv+XqaVS3HfuW/J4oxU0TY6yatCOy7cFSJ4dk+125/a60ve/FieoZS0JuLPl+ifvzdWv2eaDk0646IYullVjkVXxQso1GtxX34X18JZXy36W5KDLWMVZO2gmGamdf6bdDepfAgVJyvsv+H0tlazjtkYLtKvl+jofy9dzsc2fJp7Zbywl5Hl+X4q+9104u+I1GdwO+kHZbjXVS+S4y1jEOu0NWaYw9sFAqcQMFrfFOSG0ll3du1Upux3MVsc5Ef0FzNLqH5/ZtJb91xjEhZ2Wnebl9OtrwEV6qGNBKnCPtjjWle7Oz1qUjaI85WKnWbyr5LFCfkOW4uiJ+eAU/Y+9R6h6tOiEvG8eEHJOdFkgvwR+k7bhQ+pgqlqBLpBLQKq2efpxWuN8lvVOOGkG7mYTUTkNLsVfuY736hGyRvtCrWJr9Lx6l7oysuxVHZtt8qSqMW0JIpakPH/rvMfZc6dthKzbjaUO1s0U6UW2WzuNbsFHaFcNpL5HO+oP4STpxnF+yrZYS3ictit+k2l3j2uy/E69JB4pBaUe05XsD+fk5pXhulr6LBvErHmtQt8ZxeFF6v/biEem7pD/319bEGKcNtdp+4f9Ed1qxCJeXbLVa31HvPum6054uqfwdlNut0t8cT01R3WnPXGmSPpU+8LbhYemviamoGwRBEARBEARBEARBEARBEATB5PEvoVFvoyiNkQYAAAAASUVORK5CYII=', { frameWidth: 32, frameHeight: 48 });
+        // setup ship image
+
+        this.textures.addBase64('ship', datax);
+        document.getElementById('shipnamedraw').remove();
+
         this.load.image('bullet', './assets/bullet.png');
         this.load.image('boss1', './assets/boss1.png');
         this.load.image('boss2', './assets/boss2.png');
@@ -78,11 +75,11 @@ this.textures.addBase64('ship', dataURI);
 
     create () {
 
-        // player setup
-
         music = this.sound.add('song');
         music.play();
         lastFired: 0;
+
+        // setup player
 
         this.player = this.physics.add.sprite(250, 250, 'ship').setDepth(1);
         this.player.setScale(1.2);
@@ -108,7 +105,7 @@ this.textures.addBase64('ship', dataURI);
 
             fire: function (player)
             {
-                this.setPosition(player.x + 70, player.y);
+                this.setPosition(player.x + 15 + widthS / 2, player.y - 17);
                 this.born = 0;
             },
 
@@ -214,7 +211,6 @@ this.textures.addBase64('ship', dataURI);
     };
 
     update (time, delta) {
-
         // player ship controls, animations commented but to be enabled
 
         if (!this.player || !this.player.body) return

@@ -45,5 +45,7 @@ class endpage extends Phaser.Scene {
         stars.length = 0;
         firstrun = true;
         wavenum = 20;
+        startReady = false;
+        playerName = "";
     }
 }
