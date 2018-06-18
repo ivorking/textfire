@@ -57,6 +57,7 @@ var startReady = false;
 var heightS;
 var widthS;
 var gettingInput = false;
+var spacekey;
 
 // testing
 
