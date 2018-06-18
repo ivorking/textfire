@@ -2,7 +2,7 @@
 
 class Star {
 
-    constructor (X,Y,Velocity,Opacity) 
+    constructor (X,Y,Velocity,Opacity)
     {
         this.X = Math.random()*winW;
         this.Y = Math.random()*winH;
@@ -32,6 +32,7 @@ class Star {
 
 };
 
+
 class gameloop extends Phaser.Scene {
 
     constructor() {
@@ -39,7 +40,12 @@ class gameloop extends Phaser.Scene {
     }
 
     preload () {
-        this.load.image('ship', './assets/ship.png', { frameWidth: 32, frameHeight: 48 });
+
+        // setup ship image
+
+        this.textures.addBase64('ship', datax);
+        document.getElementById('shipnamedraw').remove();
+
         this.load.image('bullet', './assets/bullet.png');
         this.load.image('boss1', './assets/boss1.png');
         this.load.image('boss2', './assets/boss2.png');
@@ -64,44 +70,45 @@ class gameloop extends Phaser.Scene {
         this.load.audio('song', './assets/sounds/music.mp3');
         this.load.audio('gunfire', './assets/sounds/gun.mp3');
         this.load.audio('explosion', './assets/sounds/explosion.mp3');
+
     };
-       
+
     create () {
-    
-        // player setup
 
         music = this.sound.add('song');
         music.play();
         lastFired: 0;
-    
+
+        // setup player
+
         this.player = this.physics.add.sprite(250, 250, 'ship').setDepth(1);
         this.player.setScale(1.2);
         this.cursors = this.input.keyboard.createCursorKeys();
         this.player.setCollideWorldBounds(true);
-        
+
         // bullet setup
 
         this.lastFired = 0;
 
         var Bullet = new Phaser.Class({
-    
+
             Extends: Phaser.GameObjects.Image,
-    
+
             initialize:
-    
+
             function Bullet (scene)
             {
                 Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
                 this.speed = 0.5;
                 this.born = 0;
             },
-    
+
             fire: function (player)
             {
-                this.setPosition(player.x + 70, player.y);
+                this.setPosition(player.x + 15 + widthS / 2, player.y - 17);
                 this.born = 0;
             },
-    
+
             update: function (time, delta)
             {
                 this.x += this.speed * delta;
@@ -118,7 +125,7 @@ class gameloop extends Phaser.Scene {
                 }
             }
         });
-    
+
         this.cameras.main.setBounds(0, 0, winW, winH);
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -128,10 +135,10 @@ class gameloop extends Phaser.Scene {
                 runChildUpdate: true
             });
         }
-    
+
         // plain starfield - faster, less resource intensive, less impressive
         // background = this.add.tileSprite(0, 0, winW * 3, winH * 2, 'starfield');
-      
+
         this.bullets.enableBody = true;
 
         // player animations (direction images to be enabled)
@@ -142,21 +149,21 @@ class gameloop extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         });
-    
+
         this.anims.create({
             key: 'right',
             frames: [ { key: 'ship', frame: 0 } ],
             frameRate: 10,
             repeat: -1
         });
-    
+
         this.anims.create({
             key: 'up',
             frames: [ { key: 'ship', frame: 0 } ],
             frameRate: 1,
             repeat: 1
         });
-    
+
         this.anims.create({
             key: 'down',
             frames: [ { key: 'ship', frame: 0 } ],
@@ -170,7 +177,7 @@ class gameloop extends Phaser.Scene {
 
         scoreText = this.add.text(5, 5, 'Score:' + score, { fontSize: '17px', fill: '#FFFFFF' });
         waveText = this.add.text(5, 25, 'Wave:' + (wavenum - timedEvent.repeatCount), { fontSize: '17px', fill: '#FFFFFF' });
-      
+
         // explosion animation
 
         this.anims.create({
@@ -200,11 +207,10 @@ class gameloop extends Phaser.Scene {
         }, this);
 
         this.physics.world.enable(this.bullets, this.player, enemies, this.wave);
- 
+
     };
 
     update (time, delta) {
-
         // player ship controls, animations commented but to be enabled
 
         if (!this.player || !this.player.body) return
@@ -213,32 +219,38 @@ class gameloop extends Phaser.Scene {
         {
             this.player.setVelocityX(160);
             this.player.setVelocityY(160);
+            this.player.flipX = false;
         }
         else if (this.cursors.right.isDown && this.cursors.up.isDown)
         {
             this.player.setVelocityX(160);
             this.player.setVelocityY(-160);
+            this.player.flipX = false;
         }
         else if (this.cursors.left.isDown && this.cursors.down.isDown)
         {
             this.player.setVelocityX(-160);
             this.player.setVelocityY(160);
+            this.player.flipX = true;
         }
         else if (this.cursors.left.isDown && this.cursors.up.isDown)
         {
             this.player.setVelocityX(-160);
             this.player.setVelocityY(-160);
+            this.player.flipX = true;
         }
         else if (this.cursors.left.isDown)
         {
             this.player.setVelocityX(-160);
             this.player.setVelocityY(0);
+            this.player.flipX = true;
             // this.player.anims.play('left', true);
         }
         else if (this.cursors.right.isDown)
         {
             this.player.setVelocityX(160);
             this.player.setVelocityY(0);
+            this.player.flipX = false;
             // this.player.anims.play('right', true);
         }
         else if (this.cursors.up.isDown)
@@ -252,14 +264,14 @@ class gameloop extends Phaser.Scene {
             this.player.setVelocityY(160);
             this.player.setVelocityX(0);
             // this.player.anims.play('down', true);
-        } 
+        }
         else
         {
             this.player.setVelocityX(0);
             this.player.setVelocityY(0);
         }
 
-        if ((this.cursors.space.isDown && time > this.lastFired) && (!endgamevar)) 
+        if ((this.cursors.space.isDown && time > this.lastFired) && (!endgamevar))
         {
             this.bullet = this.bullets.get();
             this.bullet.setActive(true);
@@ -273,7 +285,7 @@ class gameloop extends Phaser.Scene {
                 this.lastFired = time + 100;
             }
         }
-    
+
         // plain starfield:
         // background.tilePositionX += 0.5;
 
@@ -282,14 +294,14 @@ class gameloop extends Phaser.Scene {
         for (let index = 0; index < enemies.children.entries.length; index++) {
             if (enemies.children.entries[index].x < -100) {
                 this.shipCleaner(index);
-            } 
+            }
         }
 
         // update rotations for remaining ships on screen
 
         for (let index = 0; index < rotatevar.length; index++) {
             tempvar = rotatevar[index];
-            enemies.children.entries[tempvar]._rotation += 0.05;            
+            enemies.children.entries[tempvar]._rotation += 0.05;
         }
 
         if (enemies.children.entries.length <= 1) {
@@ -306,13 +318,13 @@ class gameloop extends Phaser.Scene {
         if (this.wave) {
             let waveships = this.wave.getChildren();
             let numships = waveships.length;
-            
+
             for (let i = 0; i < numships; i++) {
 
                 // move waveships
                 waveships[i].y += waveships[i].speed;
                 waveships[i].x -= Math.abs(waveships[i].speed);
-                
+
                 // reverse movement if reach the edge of the screen
                 if (waveships[i].y >= winH || waveships[i].y <= 0) {
                     waveships[i].speed = waveships[i].speed * -1;
@@ -335,7 +347,7 @@ class gameloop extends Phaser.Scene {
         let speedVar;
         let currentEnemies = enemies.children.entries.length;
         let index = 0;
-        
+
         if (firstrun) {
             enemies.create(winW + 100,Phaser.Math.RND.integerInRange(30, winH - 30),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
             enemies.create(winW + 100,Phaser.Math.RND.integerInRange(30, winH - 30),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
@@ -361,7 +373,7 @@ class gameloop extends Phaser.Scene {
             // create hard to kill enemy (moves faster), & safety ship (lose points for hitting it)
 
             tempvar = Phaser.Math.RND.integerInRange(1, 4)
-            if (tempvar == 1) {
+            if (tempvar == 1 || tempvar == 2) {
                 enemies.create(winW + 100,Phaser.Math.RND.integerInRange(1, winH),'hardship').setActive();
                 currentEnemies = enemies.children.entries.length;
                 enemies.children.entries[currentEnemies - 1].setVelocity(-80, 0);
@@ -402,7 +414,7 @@ class gameloop extends Phaser.Scene {
             game.scene.start('endpage');
         }
     };
-    
+
     destroyEnemy (bulletvar, enemyvar) {
 
         // destroy bullets
@@ -424,7 +436,7 @@ class gameloop extends Phaser.Scene {
 
         } else {
 
-            if (enemyvar.texture.key == "safety") { 
+            if (enemyvar.texture.key == "safety") {
                 score -= 10;
             } else {
                 score++;
@@ -466,7 +478,7 @@ class gameloop extends Phaser.Scene {
                 this.bullets.children.entries[index].destroy();
             }
             this.bullets.enableBody = false;
-            
+
             game.scene.start('endpage');
         }
     };
@@ -474,7 +486,7 @@ class gameloop extends Phaser.Scene {
     waveHit (bulletvar, enemyvar) {
         let posvarwave = this.wave.children.entries.indexOf(enemyvar);
 
-        // explosion 
+        // explosion
 
         explosion = this.sound.add('explosion');
         explosion.play();
@@ -482,7 +494,7 @@ class gameloop extends Phaser.Scene {
         boom.anims.play('explode');
 
         // remove dead bullets
-        
+
         this.bullets.enableBody = false;
         posvar = this.bullets.children.entries.indexOf(bulletvar);
         this.bullets.children.entries[posvar].destroy();
@@ -500,7 +512,7 @@ class gameloop extends Phaser.Scene {
         }
         scoreText.setText('Score: ' + score);
     };
-  
+
     shipCleaner(shipid) {
 
         // remove dead ship from rotation array
@@ -667,7 +679,7 @@ class gameloop extends Phaser.Scene {
             stars.push(new Star());
         }
     }
-        
+
     drawField () {
         ctx.clearRect(0, 0, winW, winH);
         ctx.fillStyle = "rgba(255, 255, 255, 0.5)";

@@ -53,6 +53,17 @@ var timedEvent;
 var wavenum = 8;
 var speedNum;
 var music;
+var startReady = false;
+var heightS;
+var widthS;
+var gettingInput = false;
+var spacekey;
+
+// testing
+
+var playerName;
+var datax;
+var dataURI;
 
 // starvars
 
@@ -69,5 +80,3 @@ var stars = [];
 // start game
 
 var game = new Phaser.Game(config);
-
-

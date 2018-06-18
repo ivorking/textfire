@@ -6,16 +6,23 @@
     <title>textFIRE</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/stylesheets/main.css" />
+    <link rel="stylesheet" href="./assets/stylesheets/jquery-confirm.css" />
     <script src="./scripts/jquery.js"></script>
     <script src="./scripts/underscore.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
 </head>
+
 <body class = "home">
-    <canvas id="field">
-    </canvas>
-    <script src="./dist/phaser.js"></script>
-    <script src="./scripts/startpage.js"></script>
-    <script src="./scripts/gameloop.js"></script>
-    <script src="./scripts/endpage.js"></script>
-    <script src="./scripts/main.js"></script>
-</body>    
+  
+  <canvas id="field"></canvas>
+  <div id="shipnamedraw" style="display:inline-block;"></div>
+
+  <script src="./node_modules/dom-to-image/src/dom-to-image.js"></script>
+  <script src="./dist/phaser.js"></script>
+  <script src="./scripts/startpage.js"></script>
+  <script src="./scripts/gameloop.js"></script>
+  <script src="./scripts/endpage.js"></script>
+  <script src="./scripts/main.js"></script>
+
+</body>
 </html>
