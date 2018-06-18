@@ -74,8 +74,10 @@ class gameloop extends Phaser.Scene {
     };
 
     create () {
-
+              
+        music.stop();
         music = this.sound.add('song');
+        music.loop = true;
         music.play();
         lastFired: 0;
 

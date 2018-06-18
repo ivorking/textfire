@@ -13,6 +13,7 @@ class startpage extends Phaser.Scene {
     create() {
 
         music = this.sound.add('megablast');
+        music.loop = true;
         music.play();
         this.text = this.add.text(winW/2 - 50, winH/2 - 60, "textFIRE", {font: "24px Arial", fill: "#000000"});
         this.text = this.add.text(winW/2 - 300, winH/2 - 10, "an extraordinary game of interstellar excitement and adventure, AND bad words", {font: "16px Arial", fill: "#000000"});
@@ -52,8 +53,6 @@ class startpage extends Phaser.Scene {
                               datax = dataUrl;
                               startReady = true;
                           });
-      
-                          music.stop();
                       },
                   },
                   cancel: function () {
