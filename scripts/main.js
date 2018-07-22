@@ -38,6 +38,7 @@ var boom;
 var tempvar = 0;
 var tempvarx;
 var tempvary;
+var pausekey;
 var gamepaused = false;
 var endgamevar = false;
 var scoreText;
