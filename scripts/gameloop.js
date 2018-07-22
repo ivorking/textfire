@@ -200,11 +200,12 @@ class gameloop extends Phaser.Scene {
 
         this.input.keyboard.on('keydown_P', function (event) {
             if (gamepaused) {
-                this.scene.resume();
+                this.scene.run();
                 gamepaused = false;
             } else {
                 this.scene.pause();
                 gamepaused = true;
+                debugger;
             }
         }, this);
 
