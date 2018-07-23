@@ -2,44 +2,42 @@
 
 class Star {
 
-    constructor (X,Y,Velocity,Opacity)
-    {
-        this.X = Math.random()*winW;
-        this.Y = Math.random()*winH;
+    constructor(X, Y, Velocity, Opacity) {
+        this.X = Math.random() * winW;
+        this.Y = Math.random() * winH;
         this.Velocity = this.getRandFloat(0.2, 1) * maxVelocity;
-        this.Opacity = ((Math.random() * 10) + 1 ) * 0.1;
+        this.Opacity = ((Math.random() * 10) + 1) * 0.1;
     }
 
-    Draw () {
+    Draw() {
         ctx.fillStyle = "rgba(0,0,0," + this.Opacity + ")";
-        if (Math.round((Math.random()*twinkleFreq))==1) {
-            ctx.fillRect(this.X,this.Y,starSize+2,starSize+2);
+        if (Math.round((Math.random() * twinkleFreq)) == 1) {
+            ctx.fillRect(this.X, this.Y, starSize + 2, starSize + 2);
         } else {
-            ctx.fillRect(this.X,this.Y,starSize,starSize);
+            ctx.fillRect(this.X, this.Y, starSize, starSize);
         }
     };
 
-    UpdateField () {
+    UpdateField() {
         this.X -= this.Velocity;
-        if (this.X < 0){
+        if (this.X < 0) {
             this.X = winW + 1;
         }
     };
 
-    getRandFloat (min, max) {
+    getRandFloat(min, max) {
         return Math.random() * (max - min) + min;
     }
 
 };
 
-
 class gameloop extends Phaser.Scene {
 
     constructor() {
-        super ({key: "gameloop"});
+        super({ key: "gameloop" });
     }
 
-    preload () {
+    preload() {
 
         // setup ship image
 
@@ -73,8 +71,8 @@ class gameloop extends Phaser.Scene {
 
     };
 
-    create () {
-              
+    create() {
+
         music.stop();
         music = this.sound.add('song');
         music.loop = true;
@@ -98,28 +96,24 @@ class gameloop extends Phaser.Scene {
 
             initialize:
 
-            function Bullet (scene)
-            {
-                Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
-                this.speed = 0.5;
-                this.born = 0;
-            },
+                function Bullet(scene) {
+                    Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
+                    this.speed = 0.5;
+                    this.born = 0;
+                },
 
-            fire: function (player)
-            {
+            fire: function (player) {
                 this.setPosition(player.x + 15 + widthS / 2, player.y - 17);
                 this.born = 0;
             },
 
-            update: function (time, delta)
-            {
+            update: function (time, delta) {
                 this.x += this.speed * delta;
                 this.born += delta;
 
                 // comment this section out for full-length bullets
 
-                if (this.born > 1000)
-                {
+                if (this.born > 1000) {
                     this.setActive(false);
                     this.setVisible(false);
                     this.enableBody = false;
@@ -147,28 +141,28 @@ class gameloop extends Phaser.Scene {
 
         this.anims.create({
             key: 'left',
-            frames: [ { key: 'ship', frame: 0 } ],
+            frames: [{ key: 'ship', frame: 0 }],
             frameRate: 10,
             repeat: -1
         });
 
         this.anims.create({
             key: 'right',
-            frames: [ { key: 'ship', frame: 0 } ],
+            frames: [{ key: 'ship', frame: 0 }],
             frameRate: 10,
             repeat: -1
         });
 
         this.anims.create({
             key: 'up',
-            frames: [ { key: 'ship', frame: 0 } ],
+            frames: [{ key: 'ship', frame: 0 }],
             frameRate: 1,
             repeat: 1
         });
 
         this.anims.create({
             key: 'down',
-            frames: [ { key: 'ship', frame: 0 } ],
+            frames: [{ key: 'ship', frame: 0 }],
             frameRate: 10,
             repeat: 1
         });
@@ -213,77 +207,66 @@ class gameloop extends Phaser.Scene {
 
     };
 
-    update (time, delta) {
+    update(time, delta) {
         // player ship controls, animations commented but to be enabled
 
         if (!this.player || !this.player.body) return
 
-        if (this.cursors.right.isDown && this.cursors.down.isDown)
-        {
+        if (this.cursors.right.isDown && this.cursors.down.isDown) {
             this.player.setVelocityX(160);
             this.player.setVelocityY(160);
             this.player.flipX = false;
         }
-        else if (this.cursors.right.isDown && this.cursors.up.isDown)
-        {
+        else if (this.cursors.right.isDown && this.cursors.up.isDown) {
             this.player.setVelocityX(160);
             this.player.setVelocityY(-160);
             this.player.flipX = false;
         }
-        else if (this.cursors.left.isDown && this.cursors.down.isDown)
-        {
+        else if (this.cursors.left.isDown && this.cursors.down.isDown) {
             this.player.setVelocityX(-160);
             this.player.setVelocityY(160);
             this.player.flipX = true;
         }
-        else if (this.cursors.left.isDown && this.cursors.up.isDown)
-        {
+        else if (this.cursors.left.isDown && this.cursors.up.isDown) {
             this.player.setVelocityX(-160);
             this.player.setVelocityY(-160);
             this.player.flipX = true;
         }
-        else if (this.cursors.left.isDown)
-        {
+        else if (this.cursors.left.isDown) {
             this.player.setVelocityX(-160);
             this.player.setVelocityY(0);
             this.player.flipX = true;
             // this.player.anims.play('left', true);
         }
-        else if (this.cursors.right.isDown)
-        {
+        else if (this.cursors.right.isDown) {
             this.player.setVelocityX(160);
             this.player.setVelocityY(0);
             this.player.flipX = false;
             // this.player.anims.play('right', true);
         }
-        else if (this.cursors.up.isDown)
-        {
+        else if (this.cursors.up.isDown) {
             this.player.setVelocityY(-160);
             this.player.setVelocityX(0);
             // this.player.anims.play('up', true);
         }
-        else if (this.cursors.down.isDown)
-        {
+        else if (this.cursors.down.isDown) {
             this.player.setVelocityY(160);
             this.player.setVelocityX(0);
             // this.player.anims.play('down', true);
         }
-        else
-        {
+        else {
             this.player.setVelocityX(0);
             this.player.setVelocityY(0);
         }
 
-        if ((this.cursors.space.isDown && time > this.lastFired) && (!endgamevar))
-        {
+        if ((this.cursors.space.isDown && time > this.lastFired) && (!endgamevar)) {
             this.bullet = this.bullets.get();
             this.bullet.setActive(true);
             this.bullet.setVisible(true);
             gunfire = this.sound.add('gunfire');
             gunfire.play();
 
-            if (this.bullet)
-            {
+            if (this.bullet) {
                 this.bullet.fire(this.player);
                 this.lastFired = time + 100;
             }
@@ -336,7 +319,7 @@ class gameloop extends Phaser.Scene {
         }
     };
 
-    createEnemies () {
+    createEnemies() {
 
         if (enemies.length === 0) {
             enemies = this.physics.add.group();
@@ -352,12 +335,12 @@ class gameloop extends Phaser.Scene {
         let index = 0;
 
         if (firstrun) {
-            enemies.create(winW + 100,Phaser.Math.RND.integerInRange(30, winH - 30),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
-            enemies.create(winW + 100,Phaser.Math.RND.integerInRange(30, winH - 30),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
+            enemies.create(winW + 100, Phaser.Math.RND.integerInRange(30, winH - 30), 'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
+            enemies.create(winW + 100, Phaser.Math.RND.integerInRange(30, winH - 30), 'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
             enemies.setVelocity(-60, 0);
         } else {
             for (index = 0; index < spawnVar; index++) {
-                enemies.create(winW + 100,Phaser.Math.RND.integerInRange(30, winH - 30),'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
+                enemies.create(winW + 100, Phaser.Math.RND.integerInRange(30, winH - 30), 'boss' + (Phaser.Math.RND.integerInRange(1, 12))).setActive();
                 speedVar = Phaser.Math.RND.integerInRange(40, 145);
                 enemies.children.entries[currentEnemies + index].setVelocity(-speedVar, 0);
 
@@ -377,11 +360,11 @@ class gameloop extends Phaser.Scene {
 
             tempvar = Phaser.Math.RND.integerInRange(1, 4)
             if (tempvar == 1 || tempvar == 2) {
-                enemies.create(winW + 100,Phaser.Math.RND.integerInRange(1, winH),'hardship').setActive();
+                enemies.create(winW + 100, Phaser.Math.RND.integerInRange(1, winH), 'hardship').setActive();
                 currentEnemies = enemies.children.entries.length;
                 enemies.children.entries[currentEnemies - 1].setVelocity(-80, 0);
             } else if (tempvar == 3) {
-                enemies.create(winW + 100,Phaser.Math.RND.integerInRange(1, winH),'safety').setActive();
+                enemies.create(winW + 100, Phaser.Math.RND.integerInRange(1, winH), 'safety').setActive();
                 currentEnemies = enemies.children.entries.length;
                 enemies.children.entries[currentEnemies - 1].setVelocity(-90, 0);
             }
@@ -394,7 +377,7 @@ class gameloop extends Phaser.Scene {
 
     };
 
-    shipCollide (playvar, crashvar) {
+    shipCollide(playvar, crashvar) {
         if (!endgamevar) {
             console.log('here');
             explosion = this.sound.add('explosion');
@@ -418,7 +401,7 @@ class gameloop extends Phaser.Scene {
         }
     };
 
-    destroyEnemy (bulletvar, enemyvar) {
+    destroyEnemy(bulletvar, enemyvar) {
 
         // destroy bullets
 
@@ -428,7 +411,7 @@ class gameloop extends Phaser.Scene {
 
         if (enemyvar.texture.key == "hardship") {
 
-            hardcounter ++;
+            hardcounter++;
 
             if (hardcounter == 6) {
                 score += 4;
@@ -464,7 +447,7 @@ class gameloop extends Phaser.Scene {
 
     };
 
-    waveCollide (playvar, crashvar) {
+    waveCollide(playvar, crashvar) {
         if (!endgamevar) {
             explosion = this.sound.add('explosion');
             explosion.play();
@@ -486,7 +469,7 @@ class gameloop extends Phaser.Scene {
         }
     };
 
-    waveHit (bulletvar, enemyvar) {
+    waveHit(bulletvar, enemyvar) {
         let posvarwave = this.wave.children.entries.indexOf(enemyvar);
 
         // explosion
@@ -543,16 +526,16 @@ class gameloop extends Phaser.Scene {
 
     };
 
-    waveBuilder () {
+    waveBuilder() {
 
         if (!endgamevar) {
             this.wave = [];
             this.wave.length = 0;
 
-            switch(timedEvent.repeatCount) {
+            switch (timedEvent.repeatCount) {
 
                 case (wavenum): // wave 1
-                    this.wave = this.physics.add.group ({
+                    this.wave = this.physics.add.group({
                         key: 'boss3',
                         repeat: 5,
                         setXY: {
@@ -566,7 +549,7 @@ class gameloop extends Phaser.Scene {
                     break;
 
                 case (wavenum - 1): // wave 2
-                    this.wave = this.physics.add.group ({
+                    this.wave = this.physics.add.group({
                         key: 'boss5',
                         repeat: 8,
                         setXY: {
@@ -580,7 +563,7 @@ class gameloop extends Phaser.Scene {
                     break;
 
                 case (wavenum - 2): // wave 3
-                    this.wave = this.physics.add.group ({
+                    this.wave = this.physics.add.group({
                         key: 'boss6',
                         repeat: 12,
                         setXY: {
@@ -594,7 +577,7 @@ class gameloop extends Phaser.Scene {
                     break;
 
                 case (wavenum - 3): // wave 4
-                    this.wave = this.physics.add.group ({
+                    this.wave = this.physics.add.group({
                         key: 'boss2',
                         repeat: 14,
                         setXY: {
@@ -608,7 +591,7 @@ class gameloop extends Phaser.Scene {
                     break;
 
                 case (wavenum - 4): // wave 5
-                    this.wave = this.physics.add.group ({
+                    this.wave = this.physics.add.group({
                         key: 'boss11',
                         repeat: 16,
                         setXY: {
@@ -622,7 +605,7 @@ class gameloop extends Phaser.Scene {
                     break;
 
                 case (wavenum - 5): // wave 6
-                    this.wave = this.physics.add.group ({
+                    this.wave = this.physics.add.group({
                         key: 'boss12',
                         repeat: 18,
                         setXY: {
@@ -636,7 +619,7 @@ class gameloop extends Phaser.Scene {
                     break;
 
                 case (wavenum - 6): // wave 7
-                    this.wave = this.physics.add.group ({
+                    this.wave = this.physics.add.group({
                         key: 'boss7',
                         repeat: 20,
                         setXY: {
@@ -650,7 +633,7 @@ class gameloop extends Phaser.Scene {
                     break;
 
                 case (wavenum - 7): // wave 8
-                    this.wave = this.physics.add.group ({
+                    this.wave = this.physics.add.group({
                         key: 'boss9',
                         repeat: 25,
                         setXY: {
@@ -663,9 +646,9 @@ class gameloop extends Phaser.Scene {
                     speedNum = 5;
                     break;
 
-                }
+            }
 
-            Phaser.Actions.Call(this.wave.getChildren(), function(wave) {
+            Phaser.Actions.Call(this.wave.getChildren(), function (wave) {
                 wave.speed = speedNum;
             }, this);
 
@@ -677,16 +660,16 @@ class gameloop extends Phaser.Scene {
 
     // STAR FUNCTIONS
 
-    initField () {
-        for(let i=0; i<totalObjects; i++) {
+    initField() {
+        for (let i = 0; i < totalObjects; i++) {
             stars.push(new Star());
         }
     }
 
-    drawField () {
+    drawField() {
         ctx.clearRect(0, 0, winW, winH);
         ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-        for (let f=0;f<stars.length;f++) {
+        for (let f = 0; f < stars.length; f++) {
             stars[f].UpdateField();
             stars[f].Draw();
         }
