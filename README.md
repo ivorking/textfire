@@ -33,7 +33,7 @@ Technologies used for the project included:
 
 An early challenge was deciding whether to use Phaser2 or 3. When I started the project for GA, Phaser3 had just been released. While it provided numerous advantages, it also had almost no documentation or tutorials for new functionality. It also saw a fundamental redesign of handling game state. This meant existing tutorials were difficult to follow, and I had to look at source Phaser.js code to work out which functions to use. Many Phaser2 functions and uses had been deprecated. I nonetheless went with Phaser3 to ensure the project would remain current for future updates and to take advantage of newer functionality.
 
-Another challenge was allowing the user to enter the name of their ship, and then using this as a texture for the ship sprite. Phaser3 didn't have a way of readily achieving this,and because of its control of the game loop, I had to use a dom-to-image library to achieve this. The final challenge was the starfield and updating star positions with the main game loop.
+Another challenge was allowing the user to enter the name of their ship, and then using this as a texture for the ship sprite. Phaser3 didn't have a way of readily achieving this,and because of its control of the game loop, I had to use a dom node to image library to achieve it. The final challenge was the starfield and updating star positions with the main game loop while maintaining game performance.
 
 ## Support during project development
 
