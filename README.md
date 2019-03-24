@@ -1,5 +1,5 @@
 ## textFIRE!
-(c) 2018
+(c) 2019
 by Ivor King
 
 This is a tribute game to classic 90s Amiga games, e.g. Menace and Xenon II Meglablast. It uses the Phaser3 Javascript framework.
@@ -15,6 +15,7 @@ p - pause
 textFIRE is optimised to run on the following 64-bit configuration (current versions):  
 **Chrome**  
 **Windows 10**
+**Manjaro Linux**
 
 Running on Mac & Linux has resulted in poor game performance and choppy sprite movement depending on hardware configuration.
 
@@ -28,6 +29,10 @@ Technologies used for the project included:
 * GitHub
 * Webpack
 * Yarn
+
+## Running textFIRE locally
+
+You can clone this repo, then use "npm install", and "http-server" to run it locally.
 
 ## Challenges
 
