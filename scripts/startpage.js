@@ -20,7 +20,7 @@ class startpage extends Phaser.Scene {
         this.text = this.add.text(winW / 2 - 300, winH / 2 - 10, "an extraordinary game of interstellar excitement and adventure, AND bad words", { font: "16px Arial", fill: "#000000" });
         this.text = this.add.text(winW / 2 - 240, winH / 2 + 20, "SPACE - fire, CURSOR KEYS - move your ship, P - pause game", { font: "16px Arial", fill: "#000000" });
         this.text = this.add.text(winW / 2 - 115, winH / 2 + 40, "ANY MOUSE BUTTON to begin!", { font: "16px Arial", fill: "#000000" });
-        this.text = this.add.text(winW / 2 - 240, winH / 2 + 80, "Graphics optimised for: Chrome (current version), Kubuntu 18.04, Windows 10", { font: "14px Arial", fill: "#FF0000" });
+        this.text = this.add.text(winW / 2 - 240, winH / 2 + 80, "Graphics optimised for: Chrome (current version), Windows 10, Manjaro Linux", { font: "14px Arial", fill: "#FF0000" });
 
         this.input.on('pointerdown', function (pointer) {
             $.confirm({
