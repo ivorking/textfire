@@ -272,7 +272,7 @@ class gameloop extends Phaser.Scene {
             }
         }
 
-        // plain starfield:
+        // for plain starfield:
         // background.tilePositionX += 0.5;
 
         // garbage collection - remove sprites going off the screen from enemies array
