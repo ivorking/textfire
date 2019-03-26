@@ -292,11 +292,13 @@ class gameloop extends Phaser.Scene {
 
         if (enemies.children.entries.length <= 1) {
             if (firstrun) {
-                firstrun = false;
-                this.createEnemies();
-            } else {
-                this.createEnemies();
+                firstrun = false
             }
+            this.createEnemies();
+                //     this.createEnemies();
+            // } else {
+            //     this.createEnemies();
+            // }
         }
 
         this.drawField();
