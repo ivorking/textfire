@@ -15,7 +15,6 @@ p - pause
 textFIRE is optimised to run on the following 64-bit configuration (current versions):  
 **Chrome**  
 **Windows 10**
-**Manjaro Linux**
 
 Running on Mac & Linux has resulted in poor game performance and choppy sprite movement depending on hardware configuration.
 
